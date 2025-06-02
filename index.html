@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="Sean Bradley" />
-        <title>OBJLoader - Clay Look</title>
-        <meta name="description" content="Three.js TypeScript Tutorials by Sean Bradley : https://sbcode.net/threejs">
+        <meta name="author" content="Ridwan Syarif Setiawan" />
+        <title>Bus Intelligence Core</title>
+        <meta name="description" content="Three.js">
         <style>
             body {
                 overflow: hidden;
@@ -108,7 +108,7 @@
                             child.material = grayMaterial; // Terapkan material abu-abu
                             
                             // Aktifkan shadow untuk model
-                            child.castShadow = true;
+                            child.castShadow = false;
                             child.receiveShadow = true;
                         }
                     });
@@ -119,13 +119,13 @@
                     const size = box.getSize(new THREE.Vector3());
                     
                     // Posisikan model di tengah
-                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (0,0,0)
+                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (20,0,0)
                     
                     // Sesuaikan kamera berdasarkan ukuran model
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
                     let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)); // Jarak kamera yang lebih tepat
-                    cameraZ *= 1.5; // Beri sedikit ruang lebih
+                    cameraZ *= 1.2; // Beri sedikit ruang lebih
                     
                     camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ); // Sesuaikan posisi kamera untuk tampilan isometrik
                     camera.lookAt(0, 0, 0); // Arahkan kamera ke pusat objek
