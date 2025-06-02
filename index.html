@@ -166,8 +166,7 @@
             // Fungsi untuk animasi kamera
             function animateCameraToPosition(targetPosition, targetLookAt, duration = 2000) {
                 const startPosition = camera.position.clone();
-                const startLookAt = new THREE.Vector3();
-                controls.getTarget(startLookAt);
+                const startLookAt = controls.target.clone(); // Menggunakan controls.target langsung
                 
                 const startTime = Date.now();
                 const endTime = startTime + duration;
