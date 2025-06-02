@@ -86,6 +86,8 @@
             controls.dampingFactor = 0.05;
             // Batasi rotasi vertikal agar tidak bisa melihat di bawah objek terlalu jauh
             controls.maxPolarAngle = Math.PI / 2; 
+            controls.enableZoom = false; // Nonaktifkan zoom
+            controls.enablePan = false; // Nonaktifkan pan (opsional)
 
             const progressBar = document.getElementById('progressBar');
 
@@ -98,8 +100,8 @@
                     // Material abu-abu matte
                     const grayMaterial = new THREE.MeshStandardMaterial({
                         color: 0xcccccc, // Warna abu-abu yang lebih terang
-                        roughness: 1.0,  // Lebih kasar untuk tampilan matte
-                        metalness: 0.3,  // Tidak ada efek metalik
+                        roughness: 2.0,  // Lebih kasar untuk tampilan matte
+                        metalness: 0.5,  // Tidak ada efek metalik
                         side: THREE.DoubleSide
                     });
 
