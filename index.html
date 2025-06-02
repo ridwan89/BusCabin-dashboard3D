@@ -1,122 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Intelligence Core</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            color: white;
-        }
-        
-        .welcome-container {
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 2s forwards 0.5s;
-        }
-        
-        .main-content {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        
-        .logo {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 30px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        
-        .loading-bar {
-            width: 300px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            margin: 30px auto;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .loading-progress {
-            height: 100%;
-            width: 0%;
-            background: white;
-            animation: loading 10s linear forwards;
-        }
-        
-        @keyframes loading {
-            to {
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Ridwan Syarif Setiawan" />
+        <title>Bus Intelligence Core</title>
+        <meta name="description" content="Three.js">
+        <style>
+            /* Styles for welcome page */
+            .welcome-container {
+                position: fixed;
+                top: 0;
+                left: 0;
                 width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+                color: white;
+                z-index: 1000;
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeIn 2s forwards 0.5s;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="welcome-container" id="welcomeScreen">
-        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-        </svg>
-        <h1>Welcome</h1>
-        <p>You're now in command of Business Intelligence Core</p>
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
-    </div>
-    
-    <div class="main-content" id="mainContent">
-        <h1>Business Intelligence Core Dashboard</h1>
-        <p>Welcome to your command center for data analysis and business insights.</p>
-        <!-- Konten utama Anda di sini -->
-    </div>
+            
+            .welcome-logo {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 30px;
+                animation: pulse 2s infinite;
+            }
+            
+            .welcome-message {
+                font-size: 2.5rem;
+                margin-bottom: 20px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                font-family: 'Arial', sans-serif;
+            }
+            
+            .welcome-submessage {
+                font-size: 1.2rem;
+                max-width: 600px;
+                margin: 0 auto 30px;
+                font-family: 'Arial', sans-serif;
+            }
+            
+            .welcome-loading-bar {
+                width: 300px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.3);
+                margin: 30px auto;
+                border-radius: 2px;
+                overflow: hidden;
+            }
+            
+            .welcome-loading-progress {
+                height: 100%;
+                width: 0%;
+                background: white;
+                animation: loading 10s linear forwards;
+            }
+            
+            @keyframes fadeIn {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            
+            @keyframes loading {
+                to {
+                    width: 100%;
+                }
+            }
 
-    <script>
-        setTimeout(function() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-        }, 10000); // 10 detik delay
-    </script>
-</body>
+            /* Original styles */
+            body {
+                overflow: hidden;
+                margin: 0px;
+                background-color: #ffffff;
+            }
+
+            #progressBar {
+                width: 500px;
+                height: 24px;
+                position: absolute;
+                left: 50%;
+                top: 10px;
+                margin-left: -250px;
+                z-index: 100;
+            }
+        </style>       
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js",
+                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <!-- Welcome Screen -->
+        <div class="welcome-container" id="welcomeScreen">
+            <svg class="welcome-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <h1 class="welcome-message">Welcome</h1>
+            <p class="welcome-submessage">You're now in command of Business Intelligence Core</p>
+            <div class="welcome-loading-bar">
+                <div class="welcome-loading-progress"></div>
+            </div>
+        </div>
+
+        <!-- Original Three.js content (hidden initially) -->
+        <progress value="0" max="100" id="progressBar" style="display: none;"></progress>
+        
+        <script type="module">
+            // Hide Three.js content initially
+            document.body.style.visibility = 'hidden';
+            
+            // Show welcome screen for 10 seconds
+            setTimeout(function() {
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.body.style.visibility = 'visible';
+                document.getElementById('progressBar').style.display = 'block';
+                
+                // Now initialize Three.js scene
+                import * as THREE from 'three';
+                import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+                import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+                import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
+
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xffffff);
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+                scene.add(ambientLight);
+
+                const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4);
+                directionalLight1.position.set(5, 10, 7.5);
+                directionalLight1.castShadow = true;
+                scene.add(directionalLight1);
+
+                const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
+                directionalLight2.position.set(-5, -10, -7.5);
+                scene.add(directionalLight2);
+                
+                const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.3);
+                scene.add(hemisphereLight);
+
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.x = 0;
+                camera.position.y = 0;
+                camera.position.z = 10;
+
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                renderer.setClearColor(0xffffff, 1);
+                document.body.appendChild(renderer.domElement);
+
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.maxPolarAngle = Math.PI / 2; 
+                controls.enableZoom = false;
+                controls.enablePan = false;
+
+                const progressBar = document.getElementById('progressBar');
+
+                const objLoader = new OBJLoader();
+                objLoader.load(
+                    'https://ridwan89.github.io/3d-web/model.obj',
+                    (object) => {
+                        progressBar.style.display = 'none';
+                        
+                        const grayMaterial = new THREE.MeshStandardMaterial({
+                            color: 0xcccccc,
+                            roughness: 0.8,
+                            metalness: 0.1,
+                            side: THREE.DoubleSide
+                        });
+
+                        object.traverse(function(child) {
+                            if (child.isMesh) {
+                                child.material = grayMaterial;
+                                child.castShadow = true;
+                                child.receiveShadow = false;
+                                child.geometry.computeVertexNormals();
+                            }
+                        });
+                        
+                        const box = new THREE.Box3().setFromObject(object);
+                        const center = box.getCenter(new THREE.Vector3());
+                        const size = box.getSize(new THREE.Vector3());
+                        
+                        object.position.sub(center);
+                        
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        const fov = camera.fov * (Math.PI / 180);
+                        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+                        cameraZ *= 1.2;
+                        
+                        camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ);
+                        camera.lookAt(0, 0, 0);
+                        controls.update();
+                        
+                        scene.add(object);
+                    },
+                    (xhr) => {
+                        if (xhr.lengthComputable) {
+                            var percentComplete = (xhr.loaded / xhr.total) * 100;
+                            progressBar.value = percentComplete;
+                            progressBar.style.display = 'block';
+                        }
+                    },
+                    (error) => {
+                        console.error('Error loading OBJ:', error);
+                        progressBar.style.display = 'none';
+                    }
+                );
+
+                function onWindowResize() {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    render();
+                }
+                window.addEventListener('resize', onWindowResize, false);
+
+                const stats = new Stats();
+                document.body.appendChild(stats.dom);
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    render();
+                    stats.update();
+                }
+
+                function render() {
+                    renderer.render(scene, camera);
+                }
+
+                animate();
+            }, 10000); // 10 seconds delay
+        </script>
+    </body>
 </html>
