@@ -98,7 +98,7 @@
                     // Material abu-abu matte
                     const grayMaterial = new THREE.MeshStandardMaterial({
                         color: 0xcccccc, // Warna abu-abu yang lebih terang
-                        roughness: 0.7,  // Lebih kasar untuk tampilan matte
+                        roughness: 0.9,  // Lebih kasar untuk tampilan matte
                         metalness: 0.0,  // Tidak ada efek metalik
                         side: THREE.DoubleSide
                     });
@@ -108,8 +108,8 @@
                             child.material = grayMaterial; // Terapkan material abu-abu
                             
                             // Aktifkan shadow untuk model
-                            child.castShadow = false;
-                            child.receiveShadow = true;
+                            child.castShadow = true;
+                            child.receiveShadow = false;
                         }
                     });
                     
@@ -119,7 +119,7 @@
                     const size = box.getSize(new THREE.Vector3());
                     
                     // Posisikan model di tengah
-                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (20,0,0)
+                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (0,0,0)
                     
                     // Sesuaikan kamera berdasarkan ukuran model
                     const maxDim = Math.max(size.x, size.y, size.z);
