@@ -4,13 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Sean Bradley" />
-        <title>OBJLoader</title>
+        <title>OBJLoader - Clay Look</title>
         <meta name="description" content="Three.js TypeScript Tutorials by Sean Bradley : https://sbcode.net/threejs">
         <style>
             body {
                 overflow: hidden;
                 margin: 0px;
-                background-color: #f0f0f0;
+                background-color: #ffffff; /* Ubah latar belakang body menjadi putih */
             }
 
             #progressBar {
@@ -22,7 +22,7 @@
                 margin-left: -250px;
                 z-index: 100;
             }
-        </style>        
+        </style>       
         <script type="importmap">
             {
                 "imports": {
@@ -41,42 +41,52 @@
             import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
 
             const scene = new THREE.Scene();
-            // Ubah warna latar belakang menjadi biru muda
-            scene.background = new THREE.Color(0xe0e0e0);
+            // Ubah warna latar belakang scene menjadi putih
+            scene.background = new THREE.Color(0xffffff);
 
-            const axesHelper = new THREE.AxesHelper(5);
-            scene.add(axesHelper);
+            // Hapus axesHelper dan gridHelper untuk tampilan yang bersih
+            // const axesHelper = new THREE.AxesHelper(5);
+            // scene.add(axesHelper);
+            // const gridHelper = new THREE.GridHelper(20, 20, 0x555555, 0x333333);
+            // scene.add(gridHelper);
 
-            // Tambahkan pencahayaan yang lebih merata
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            // Tambahkan pencahayaan yang lebih merata dan lembut
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Intensitas ambient light lebih tinggi
             scene.add(ambientLight);
 
-            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight1.position.set(1, 1, 1);
+            // Tambahkan DirectionalLight dari beberapa arah untuk pencahayaan merata
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4); // Intensitas sedikit lebih rendah
+            directionalLight1.position.set(5, 10, 7.5);
+            directionalLight1.castShadow = true; // Aktifkan bayangan
             scene.add(directionalLight1);
 
-            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight2.position.set(-1, -1, -1);
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3); // Cahaya tambahan dari arah berlawanan
+            directionalLight2.position.set(-5, -10, -7.5);
             scene.add(directionalLight2);
-
-            const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.3);
+            
+            // HemisphereLight untuk efek langit-bumi yang lembut
+            const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.3);
             scene.add(hemisphereLight);
 
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.x = -5;
-            camera.position.y = 8;
-            camera.position.z = -10;
+            // Posisi kamera awal bisa disesuaikan, tapi akan diatur ulang oleh bounding box
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 10;
 
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.setClearColor(0xe0e0e0, 1);
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // PCFSoftShadowMap untuk bayangan yang lebih lembut
+            renderer.setClearColor(0xffffff, 1); // Warna latar belakang renderer putih
             document.body.appendChild(renderer.domElement);
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
+            // Batasi rotasi vertikal agar tidak bisa melihat di bawah objek terlalu jauh
+            controls.maxPolarAngle = Math.PI / 2; 
+
             const progressBar = document.getElementById('progressBar');
 
             const objLoader = new OBJLoader();
@@ -85,18 +95,19 @@
                 (object) => {
                     progressBar.style.display = 'none';
                     
-                    // Tambahkan material default ke semua bagian model
+                    // Material abu-abu matte
+                    const grayMaterial = new THREE.MeshStandardMaterial({
+                        color: 0xcccccc, // Warna abu-abu yang lebih terang
+                        roughness: 0.7,  // Lebih kasar untuk tampilan matte
+                        metalness: 0.0,  // Tidak ada efek metalik
+                        side: THREE.DoubleSide
+                    });
+
                     object.traverse(function(child) {
                         if (child.isMesh) {
-                            // Gunakan material yang lebih baik
-                            child.material = new THREE.MeshStandardMaterial({
-                                color: 0x6699cc,
-                                roughness: 0.3,
-                                metalness: 0.5,
-                                side: THREE.DoubleSide
-                            });
+                            child.material = grayMaterial; // Terapkan material abu-abu
                             
-                            // Aktifkan shadow
+                            // Aktifkan shadow untuk model
                             child.castShadow = true;
                             child.receiveShadow = true;
                         }
@@ -108,18 +119,17 @@
                     const size = box.getSize(new THREE.Vector3());
                     
                     // Posisikan model di tengah
-                    object.position.x += (object.position.x - center.x);
-                    object.position.y += (object.position.y - center.y);
-                    object.position.z += (object.position.z - center.z);
+                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (0,0,0)
                     
                     // Sesuaikan kamera berdasarkan ukuran model
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
-                    let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2));
-                    cameraZ *= 1.5; // Beri sedikit ruang
+                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)); // Jarak kamera yang lebih tepat
+                    cameraZ *= 1.5; // Beri sedikit ruang lebih
                     
-                    camera.position.z = cameraZ;
-                    controls.update();
+                    camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ); // Sesuaikan posisi kamera untuk tampilan isometrik
+                    camera.lookAt(0, 0, 0); // Arahkan kamera ke pusat objek
+                    controls.update(); // Update kontrol setelah posisi kamera diatur
                     
                     scene.add(object);
                 },
@@ -135,10 +145,6 @@
                     progressBar.style.display = 'none';
                 }
             );
-
-            // Tambahkan grid helper untuk referensi visual
-            const gridHelper = new THREE.GridHelper(20, 20, 0x555555, 0x333333);
-            scene.add(gridHelper);
 
             function onWindowResize() {
                 camera.aspect = window.innerWidth / window.innerHeight;
