@@ -23,17 +23,6 @@
                 z-index: 100;
                 transition: opacity 0.5s ease-out;
             }
-
-            /* Style for fade-in animation */
-            .fade-in {
-                opacity: 0;
-                animation: fadeIn 1.5s ease-in forwards;
-            }
-
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
         </style>       
         <script type="importmap">
             {
@@ -99,7 +88,7 @@
                     progressBar.style.opacity = '0';
                     setTimeout(() => {
                         progressBar.style.display = 'none';
-                    }, 500); // Match this with the CSS transition duration
+                    }, 500);
                     
                     // Material abu-abu matte
                     const grayMaterial = new THREE.MeshStandardMaterial({
@@ -107,8 +96,8 @@
                         roughness: 0.8,
                         metalness: 0.1,
                         side: THREE.DoubleSide,
-                        transparent: true, // Enable transparency for fade-in
-                        opacity: 0 // Start with invisible object
+                        transparent: true,
+                        opacity: 0
                     });
 
                     object.traverse(function(child) {
@@ -132,33 +121,59 @@
                     let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
                     cameraZ *= 1.2;
                     
-                    camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ);
+                    // Simpan posisi kamera akhir
+                    const targetCameraPosition = new THREE.Vector3(
+                        cameraZ * 0.7, 
+                        cameraZ * 0.5, 
+                        cameraZ
+                    );
+                    
+                    // Set posisi awal kamera lebih jauh untuk zoom out effect
+                    const startCameraPosition = targetCameraPosition.clone().multiplyScalar(1.5);
+                    camera.position.copy(startCameraPosition);
                     camera.lookAt(0, 0, 0);
                     controls.update();
                     
                     scene.add(object);
                     
-                    // Animate the opacity to create fade-in effect
+                    // Animate the opacity and zoom out
                     let opacity = 0;
-                    const fadeInDuration = 1500; // 1.5 seconds
-                    const fadeStartTime = Date.now();
+                    const animationDuration = 1500; // 1.5 seconds
+                    const animationStartTime = Date.now();
                     
-                    const fadeIn = () => {
-                        const elapsed = Date.now() - fadeStartTime;
-                        opacity = Math.min(elapsed / fadeInDuration, 1);
+                    const animateIntro = () => {
+                        const elapsed = Date.now() - animationStartTime;
+                        const progress = Math.min(elapsed / animationDuration, 1);
                         
+                        // Fade in animation
+                        opacity = progress;
+                        
+                        // Zoom out animation (interpolate camera position)
+                        camera.position.lerpVectors(
+                            startCameraPosition,
+                            targetCameraPosition,
+                            progress
+                        );
+                        camera.lookAt(0, 0, 0);
+                        
+                        // Update materials opacity
                         object.traverse(function(child) {
                             if (child.isMesh) {
                                 child.material.opacity = opacity;
                             }
                         });
                         
-                        if (opacity < 1) {
-                            requestAnimationFrame(fadeIn);
+                        if (progress < 1) {
+                            requestAnimationFrame(animateIntro);
+                        } else {
+                            // Setelah animasi selesai, aktifkan kontrol orbit
+                            controls.enabled = true;
                         }
                     };
                     
-                    fadeIn();
+                    // Nonaktifkan kontrol selama animasi
+                    controls.enabled = false;
+                    animateIntro();
                 },
                 (xhr) => {
                     if (xhr.lengthComputable) {
