@@ -24,7 +24,7 @@
         <script type="importmap">
             {
                 "imports": {
-                    "three": "/build/three.module.js"
+                    "three": "/three.module.js"
                 }
             }
         </script>
@@ -33,9 +33,9 @@
         <progress value="0" max="100" id="progressBar"></progress>
         <script type="module">
             import * as THREE from 'three'
-            import { OrbitControls } from '/jsm/controls/OrbitControls.js'
-            import { OBJLoader } from '/jsm/loaders/OBJLoader.js'
-            import Stats from '/jsm/libs/stats.module.js'
+            import { OrbitControls } from '/OrbitControls.js'
+            import { OBJLoader } from '/OBJLoader.js'
+            import Stats from '/stats.module.js'
 
             const scene = new THREE.Scene()
 
@@ -59,7 +59,7 @@
 
             const objLoader = new OBJLoader()
             objLoader.load(
-                '/models/model.obj',
+                '/model.obj',
                 (object) => {
                     //(<THREE.Mesh>object.children[0]).material = material
                     // object.traverse(function (child) {
