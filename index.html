@@ -125,7 +125,7 @@
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
                     let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)); // Jarak kamera yang lebih tepat
-                    cameraZ *= 0; // Beri sedikit ruang lebih
+                    cameraZ *= 1; // Beri sedikit ruang lebih
                     
                     camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ); // Sesuaikan posisi kamera untuk tampilan isometrik
                     camera.lookAt(0, 0, 0); // Arahkan kamera ke pusat objek
