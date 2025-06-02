@@ -1,83 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tampilan Model 3D Offline</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Tampilan Model 3D</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
-    <script type="module">
-        // Import Three.js dan OBJLoader sebagai module
-        import * as THREE from 'https://unpkg.com/three@0.157.0/build/three.module.js';
-        import { OBJLoader } from 'https://unpkg.com/three@0.157.0/examples/jsm/loaders/OBJLoader.js';
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.157.0/build/three.module.js';
+    import { OBJLoader } from 'https://unpkg.com/three@0.157.0/examples/jsm/loaders/OBJLoader.js';
 
-        // Inisialisasi Scene, Camera, dan Renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-        // Tambahkan pencahayaan
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
+    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(1, 1, 1).normalize();
-        scene.add(directionalLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight);
 
-        // Load model OBJ
-        const loader = new OBJLoader(); // Tidak perlu lagi THREE.OBJLoader
-        loader.load(
-            './model.obj', // Path ke file OBJ Anda
-            function (object) {
-                object.traverse(function (child) {
-                    if (child instanceof THREE.Mesh) {
-                        if (!child.material) {
-                            child.material = new THREE.MeshStandardMaterial({ color: 0x808080 });
-                        }
-                    }
-                });
-                scene.add(object);
+    const loader = new OBJLoader();
+    loader.load('model.obj', function (object) {
+      scene.add(object);
 
-                const box = new THREE.Box3().setFromObject(object);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
+      const box = new THREE.Box3().setFromObject(object);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+      cameraZ *= 1.5;
 
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const fov = camera.fov * (Math.PI / 180);
-                let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-                cameraZ *= 1.5;
+      camera.position.set(center.x, center.y, center.z + cameraZ);
+      camera.lookAt(center);
+    });
 
-                camera.position.set(center.x, center.y, center.z + cameraZ);
-                camera.lookAt(center);
-            },
-            function (xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-            },
-            function (error) {
-                console.error('An error happened', error);
-            }
-        );
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
-        // Fungsi animasi untuk merender scene
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-
-        // Tangani perubahan ukuran jendela
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        animate();
-    </script>
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
 </body>
 </html>
