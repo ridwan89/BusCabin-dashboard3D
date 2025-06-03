@@ -173,57 +173,79 @@
             flex: 1;
         }
         
-        .gauge-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+        .gauges-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
         }
         
         .gauge {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
             position: relative;
+            width: 100%;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
-        .gauge-speed {
-            max-width: 150px;
+        .gauge-body {
+            width: 100%;
+            height: 0;
+            padding-bottom: 50%;
+            position: relative;
+            border-top-left-radius: 100% 200%;
+            border-top-right-radius: 100% 200%;
+            overflow: hidden;
+            background-color: #f5f5f5;
+        }
+        
+        .gauge-fill {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #FFC107, #F44336);
+            transform-origin: center top;
+            transform: rotate(0.5turn);
+            transition: transform 0.5s ease-out;
+        }
+        
+        .gauge-cover {
+            width: 75%;
+            height: 150%;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-color);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) inset;
         }
         
         .gauge-title {
             font-size: 0.9em;
             color: var(--sub-text-color);
-            margin-bottom: 5px;
+            margin-top: 5px;
         }
         
         .gauge-value {
-            font-size: 1.8em;
+            font-size: 1.2em;
             font-weight: 600;
             color: var(--primary-color);
         }
         
         .gauge-unit {
-            font-size: 0.8em;
+            font-size: 0.7em;
             color: var(--sub-text-color);
-        }
-        
-        .gauge-meter {
-            height: 8px;
-            background: linear-gradient(to right, #4CAF50, #FFC107, #F44336);
-            border-radius: 4px;
-            margin-top: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .gauge-indicator {
-            position: absolute;
-            top: -4px;
-            width: 2px;
-            height: 16px;
-            background-color: var(--text-color);
-            transform: translateX(-50%);
-            transition: left 0.5s ease-out;
         }
         
         .status-indicators {
@@ -391,43 +413,45 @@
                         <span class="more-options">...</span>
                     </div>
                     
-                    <div class="gauge-container">
-                        <div class="gauge gauge-speed">
-                            <div class="gauge-title">Speed</div>
-                            <div class="gauge-value" id="speedValue">0</div>
-                            <div class="gauge-unit">km/h</div>
-                            <div class="gauge-meter">
-                                <div class="gauge-indicator" id="speedIndicator" style="left: 0%;"></div>
+                    <div class="gauges-container">
+                        <div class="gauge">
+                            <div class="gauge-body">
+                                <div class="gauge-fill" id="speedFill"></div>
+                                <div class="gauge-cover">
+                                    <div class="gauge-value" id="speedValue">0</div>
+                                </div>
                             </div>
+                            <div class="gauge-title">Speed <span class="gauge-unit">km/h</span></div>
                         </div>
                         
                         <div class="gauge">
-                            <div class="gauge-title">Engine Temp</div>
-                            <div class="gauge-value" id="engineTempValue">--</div>
-                            <div class="gauge-unit">°C</div>
-                            <div class="gauge-meter">
-                                <div class="gauge-indicator" id="engineTempIndicator" style="left: 50%;"></div>
+                            <div class="gauge-body">
+                                <div class="gauge-fill" id="rpmFill"></div>
+                                <div class="gauge-cover">
+                                    <div class="gauge-value" id="rpmValue">0</div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="gauge-container">
-                        <div class="gauge">
-                            <div class="gauge-title">RPM</div>
-                            <div class="gauge-value" id="rpmValue">0</div>
-                            <div class="gauge-unit">x1000</div>
-                            <div class="gauge-meter">
-                                <div class="gauge-indicator" id="rpmIndicator" style="left: 30%;"></div>
-                            </div>
+                            <div class="gauge-title">RPM <span class="gauge-unit">x1000</span></div>
                         </div>
                         
                         <div class="gauge">
-                            <div class="gauge-title">Fuel Level</div>
-                            <div class="gauge-value" id="fuelValue">--</div>
-                            <div class="gauge-unit">%</div>
-                            <div class="gauge-meter">
-                                <div class="gauge-indicator" id="fuelIndicator" style="left: 75%;"></div>
+                            <div class="gauge-body">
+                                <div class="gauge-fill" id="engineTempFill"></div>
+                                <div class="gauge-cover">
+                                    <div class="gauge-value" id="engineTempValue">--</div>
+                                </div>
                             </div>
+                            <div class="gauge-title">Engine Temp <span class="gauge-unit">°C</span></div>
+                        </div>
+                        
+                        <div class="gauge">
+                            <div class="gauge-body">
+                                <div class="gauge-fill" id="fuelFill"></div>
+                                <div class="gauge-cover">
+                                    <div class="gauge-value" id="fuelValue">--</div>
+                                </div>
+                            </div>
+                            <div class="gauge-title">Fuel Level <span class="gauge-unit">%</span></div>
                         </div>
                     </div>
                     
@@ -786,13 +810,13 @@
 
         // New automotive elements
         const speedValueElement = document.getElementById("speedValue");
-        const speedIndicatorElement = document.getElementById("speedIndicator");
+        const speedFillElement = document.getElementById("speedFill");
         const engineTempValueElement = document.getElementById("engineTempValue");
-        const engineTempIndicatorElement = document.getElementById("engineTempIndicator");
+        const engineTempFillElement = document.getElementById("engineTempFill");
         const rpmValueElement = document.getElementById("rpmValue");
-        const rpmIndicatorElement = document.getElementById("rpmIndicator");
+        const rpmFillElement = document.getElementById("rpmFill");
         const fuelValueElement = document.getElementById("fuelValue");
-        const fuelIndicatorElement = document.getElementById("fuelIndicator");
+        const fuelFillElement = document.getElementById("fuelFill");
 
         const emergencyToggle = document.querySelector('.emergency-toggle');
         emergencyToggle.addEventListener('click', () => {
@@ -822,16 +846,16 @@
             
             // Update automotive infographic
             speedValueElement.textContent = speed;
-            speedIndicatorElement.style.left = `${(speed / 120) * 100}%`;
+            speedFillElement.style.transform = `rotate(${(speed / 120) * 0.5}turn)`;
             
             engineTempValueElement.textContent = engineTemp;
-            engineTempIndicatorElement.style.left = `${((engineTemp - 70) / 30) * 100}%`;
+            engineTempFillElement.style.transform = `rotate(${((engineTemp - 70) / 30) * 0.5}turn)`;
             
             rpmValueElement.textContent = rpm;
-            rpmIndicatorElement.style.left = `${(rpm / 4) * 100}%`;
+            rpmFillElement.style.transform = `rotate(${(rpm / 4) * 0.5}turn)`;
             
             fuelValueElement.textContent = fuelLevel;
-            fuelIndicatorElement.style.left = `${fuelLevel}%`;
+            fuelFillElement.style.transform = `rotate(${(fuelLevel / 100) * 0.5}turn)`;
             
             // Update location text
             busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
