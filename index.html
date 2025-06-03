@@ -257,10 +257,10 @@
                 color: var(--text-color);
             }
 
-            /* Control Buttons Grid */
+            /* Control Buttons Grid - Icon Only */
             #controlButtonsGrid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(4, 1fr); /* 4 kolom untuk tampilan lebih rapi */
                 gap: 15px;
                 flex: 1;
                 min-height: 0;
@@ -268,31 +268,30 @@
             .grid-btn {
                 background-color: var(--hover-color);
                 border-radius: var(--border-radius);
-                padding: 20px;
+                padding: 15px; /* Sedikit lebih kecil */
                 text-align: center;
-                font-size: 1em;
-                font-weight: 500;
-                color: var(--text-color);
                 cursor: pointer;
-                transition: background-color 0.2s ease, transform 0.1s ease;
+                transition: all 0.2s ease;
                 display: flex;
-                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                min-height: 100px;
+                aspect-ratio: 1/1; /* Membuat tombol persegi */
+                min-height: 0;
             }
             .grid-btn .icon {
-                font-size: 2em;
-                margin-bottom: 10px;
-                color: var(--primary-color);
+                font-size: 1.8em; /* Ukuran ikon sedikit lebih kecil */
+                color: #333; /* Warna hitam */
+                filter: grayscale(100%); /* Membuat ikon hitam putih */
+                transition: all 0.2s ease;
             }
             .grid-btn:hover {
                 background-color: var(--primary-color);
-                color: white;
                 transform: translateY(-3px);
             }
             .grid-btn:hover .icon {
                 color: white;
+                filter: grayscale(0%); /* Kembalikan ke warna asli saat hover */
+                transform: scale(1.1);
             }
 
             /* Emergency Card */
@@ -480,35 +479,27 @@
                     <div id="controlButtonsGrid">
                         <div class="grid-btn" id="doorStatusBtn">
                             <span class="icon">🚪</span>
-                            Door Status
                         </div>
                         <div class="grid-btn" id="passengerListBtn">
                             <span class="icon">👥</span>
-                            Passenger List
                         </div>
                         <div class="grid-btn" id="lightStatusBtn">
                             <span class="icon">💡</span>
-                            Light Status
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🗺️</span>
-                            Live Map (Placeholder)
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🔦</span>
-                            Flash Light (Placeholder)
                         </div>
                         <div class="grid-btn">
                             <span class="icon">⚡</span>
-                            Charging (Placeholder)
                         </div>
                         <div class="grid-btn" id="driverAnnouncementBtn">
                             <span class="icon">📢</span>
-                            Announcement
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🧭</span>
-                            Direction (Placeholder)
                         </div>
                     </div>
 
