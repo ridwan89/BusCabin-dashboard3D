@@ -10,7 +10,9 @@
             body {
                 overflow: hidden;
                 margin: 0px;
-                background-color: #ffffff;
+                background-color: #2c3e50; /* Warna latar belakang yang lebih gelap dan senada */
+                color: #ecf0f1; /* Warna teks terang agar kontras */
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
 
             #progressBar {
@@ -22,52 +24,95 @@
                 margin-left: -250px;
                 z-index: 100;
                 transition: opacity 0.5s ease-out;
+                background-color: #34495e; /* Warna progress bar senada */
+                border-radius: 5px;
+            }
+            #progressBar::-webkit-progress-bar {
+                background-color: #34495e;
+                border-radius: 5px;
+            }
+            #progressBar::-webkit-progress-value {
+                background-color: #27ae60; /* Warna hijau yang nyaman */
+                border-radius: 5px;
+            }
+            #progressBar::-moz-progress-bar {
+                background-color: #27ae60;
+                border-radius: 5px;
             }
             
-            /* New styles for control panel */
+            /* New styles for control panel - Dashboard Look */
             #controlPanel {
                 position: absolute;
                 top: 20px;
                 right: 20px;
-                background-color: rgba(255, 255, 255, 0.9);
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                padding: 15px;
+                background-color: rgba(44, 62, 80, 0.8); /* Warna gelap transparan senada dengan body */
+                border-radius: 15px;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+                padding: 25px;
                 z-index: 100;
-                font-family: Arial, sans-serif;
-                max-width: 250px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                max-width: 300px;
+                border: 1px solid rgba(52, 73, 94, 0.7); /* Border halus */
             }
             
             #controlPanel h3 {
                 margin-top: 0;
-                margin-bottom: 15px;
-                color: #333;
+                margin-bottom: 20px;
+                color: #ecf0f1;
                 text-align: center;
+                font-size: 1.8em;
+                letter-spacing: 1px;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            }
+
+            .dashboard-info {
+                margin-bottom: 15px;
+                padding: 10px 15px;
+                background-color: rgba(52, 73, 94, 0.6); /* Warna background info */
+                border-radius: 8px;
+                font-size: 0.95em;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 3px solid #3498db; /* Aksen warna */
+            }
+
+            .dashboard-info strong {
+                color: #3498db; /* Warna penekanan untuk label */
+                margin-right: 10px;
             }
             
             .control-btn {
                 display: block;
                 width: 100%;
-                padding: 10px;
-                margin-bottom: 10px;
-                background-color: #4CAF50;
+                padding: 12px 15px;
+                margin-bottom: 12px;
+                background-color: #3498db; /* Warna biru yang menenangkan */
                 color: white;
                 border: none;
-                border-radius: 4px;
+                border-radius: 8px;
                 cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s;
+                font-size: 1.1em;
+                font-weight: bold;
+                transition: background-color 0.3s ease, transform 0.1s ease;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             }
             
             .control-btn:hover {
-                background-color: #45a049;
+                background-color: #2980b9; /* Warna biru sedikit lebih gelap saat hover */
+                transform: translateY(-2px); /* Efek sedikit terangkat */
+            }
+            
+            .control-btn:active {
+                background-color: #2c3e50; /* Warna lebih gelap saat diklik */
+                transform: translateY(0);
             }
             
             .control-btn:last-child {
                 margin-bottom: 0;
             }
             
-            /* Modal styles */
+            /* Modal styles - Senada dengan dashboard */
             .modal {
                 display: none;
                 position: fixed;
@@ -76,31 +121,85 @@
                 top: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0,0,0,0.4);
+                background-color: rgba(0,0,0,0.6); /* Lebih gelap untuk fokus */
+                display: flex; /* Untuk memposisikan konten di tengah */
+                align-items: center;
+                justify-content: center;
             }
             
             .modal-content {
-                background-color: #fefefe;
-                margin: 15% auto;
-                padding: 20px;
+                background-color: #34495e; /* Warna gelap senada */
+                margin: auto;
+                padding: 30px;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 550px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+                color: #ecf0f1;
+                position: relative;
+                border: 1px solid rgba(52, 73, 94, 0.7);
+            }
+            
+            .modal-content h2 {
+                margin-top: 0;
+                margin-bottom: 20px;
+                color: #27ae60; /* Aksen warna hijau */
+                text-align: center;
+                font-size: 1.5em;
+                border-bottom: 2px solid #27ae60;
+                padding-bottom: 10px;
+            }
+
+            .modal-content p {
+                margin-bottom: 10px;
+                font-size: 1.1em;
+                line-height: 1.6;
+            }
+
+            .modal-content .status-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px dashed rgba(236, 240, 241, 0.2);
+            }
+
+            .modal-content .status-item:last-child {
+                border-bottom: none;
+            }
+
+            .modal-content .status-item span:first-child {
+                font-weight: bold;
+                color: #bdc3c7;
+            }
+            .modal-content .status-item span:last-child {
+                color: #f1c40f; /* Warna kuning untuk nilai status */
+            }
+            .modal-content .status-item.announcement {
+                text-align: center;
+                font-style: italic;
+                color: #ecf0f1;
+                background-color: rgba(39, 174, 96, 0.3);
+                padding: 15px;
                 border-radius: 8px;
-                width: 80%;
-                max-width: 500px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                margin-top: 20px;
+                border: 1px solid #27ae60;
             }
             
             .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
+                color: #bdc3c7;
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 32px;
                 font-weight: bold;
                 cursor: pointer;
+                transition: color 0.3s ease;
             }
             
             .close:hover {
-                color: black;
+                color: #e74c3c; /* Warna merah saat hover */
             }
-        </style>       
+        </style>        
         <script type="importmap">
             {
                 "imports": {
@@ -113,23 +212,36 @@
     <body>
         <progress value="0" max="100" id="progressBar"></progress>
         
-        <!-- New Control Panel -->
         <div id="controlPanel">
-            <h3>Bus Controls</h3>
+            <h3>Bus Intelligence Dashboard</h3>
+
+            <div class="dashboard-info">
+                <strong>Kecepatan Bus:</strong> <span id="busSpeed">0 km/jam</span>
+            </div>
+            <div class="dashboard-info">
+                <strong>Lokasi Bus:</strong> <span id="busLocation">Loading...</span>
+            </div>
+            <div class="dashboard-info">
+                <strong>Suhu Mesin:</strong> <span id="engineTemp">-- °C</span>
+            </div>
+            <div class="dashboard-info">
+                <strong>Suhu Kabin:</strong> <span id="cabinTemp">-- °C</span>
+            </div>
+            
             <button class="control-btn" id="doorStatusBtn">Door Status</button>
             <button class="control-btn" id="passengerListBtn">Passenger List</button>
-            <button class="control-btn" id="lightMonitorBtn">Light Monitor</button>
+            <button class="control-btn" id="lightStatusBtn">Light Status</button>
+            <button class="control-btn" id="driverAnnouncementBtn">Driver Announcement</button>
         </div>
         
-        <!-- Modal Windows -->
         <div id="doorStatusModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Door Status</h2>
-                <p>Front Door: Closed</p>
-                <p>Middle Door: Closed</p>
-                <p>Rear Door: Closed</p>
-                <p>Emergency Exits: All Secure</p>
+                <div class="status-item"><span>Front Door:</span> <span id="frontDoorStatus">Closed</span></div>
+                <div class="status-item"><span>Middle Door:</span> <span id="middleDoorStatus">Closed</span></div>
+                <div class="status-item"><span>Rear Door:</span> <span id="rearDoorStatus">Closed</span></div>
+                <div class="status-item"><span>Emergency Exits:</span> <span id="emergencyExitStatus">All Secure</span></div>
             </div>
         </div>
         
@@ -137,22 +249,32 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Passenger List</h2>
-                <p>Total Passengers: 24</p>
-                <p>Seated: 20</p>
-                <p>Standing: 4</p>
-                <p>Special Needs: 2</p>
+                <div class="status-item"><span>Total Passengers:</span> <span id="totalPassengers">24</span></div>
+                <div class="status-item"><span>Seated:</span> <span id="seatedPassengers">20</span></div>
+                <div class="status-item"><span>Standing:</span> <span id="standingPassengers">4</span></div>
+                <div class="status-item"><span>Special Needs:</span> <span id="specialNeedsPassengers">2</span></div>
             </div>
         </div>
         
-        <div id="lightMonitorModal" class="modal">
+        <div id="lightStatusModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>Light Monitor</h2>
-                <p>Interior Lights: On</p>
-                <p>Headlights: On</p>
-                <p>Brake Lights: Off</p>
-                <p>Turn Signals: Off</p>
-                <p>Emergency Lights: Off</p>
+                <h2>Light Status</h2>
+                <div class="status-item"><span>Interior Lights:</span> <span id="interiorLights">On</span></div>
+                <div class="status-item"><span>Headlights:</span> <span id="headlights">On</span></div>
+                <div class="status-item"><span>Brake Lights:</span> <span id="brakeLights">Off</span></div>
+                <div class="status-item"><span>Turn Signals:</span> <span id="turnSignals">Off</span></div>
+                <div class="status-item"><span>Emergency Lights:</span> <span id="emergencyLights">Off</span></div>
+            </div>
+        </div>
+
+        <div id="driverAnnouncementModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Driver Announcement</h2>
+                <div class="status-item announcement" id="announcementText">
+                    "Selamat datang para penumpang. Bus akan segera berangkat. Mohon siapkan karcis atau kartu pembayaran Anda. Terima kasih."
+                </div>
             </div>
         </div>
         
@@ -163,7 +285,7 @@
             import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
 
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xffffff);
+            scene.background = new THREE.Color(0x2c3e50); // Warna latar belakang 3D yang senada
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambientLight);
@@ -189,7 +311,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.setClearColor(0xffffff, 1);
+            renderer.setClearColor(0x2c3e50, 1); // Warna latar belakang renderer yang senada
             document.body.appendChild(renderer.domElement);
 
             const controls = new OrbitControls(camera, renderer.domElement);
@@ -213,7 +335,7 @@
                     
                     // Material abu-abu matte
                     const grayMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xcccccc,
+                        color: 0x7f8c8d, /* Warna abu-abu yang lebih gelap dan senada */
                         roughness: 0.8,
                         metalness: 0.1,
                         side: THREE.DoubleSide,
@@ -378,24 +500,30 @@
             // Modal functionality
             const doorStatusBtn = document.getElementById("doorStatusBtn");
             const passengerListBtn = document.getElementById("passengerListBtn");
-            const lightMonitorBtn = document.getElementById("lightMonitorBtn");
-            
+            const lightStatusBtn = document.getElementById("lightStatusBtn"); // Changed ID
+            const driverAnnouncementBtn = document.getElementById("driverAnnouncementBtn"); // New button
+
             const doorStatusModal = document.getElementById("doorStatusModal");
             const passengerListModal = document.getElementById("passengerListModal");
-            const lightMonitorModal = document.getElementById("lightMonitorModal");
+            const lightStatusModal = document.getElementById("lightStatusModal"); // Changed ID
+            const driverAnnouncementModal = document.getElementById("driverAnnouncementModal"); // New modal
             
             const closeButtons = document.getElementsByClassName("close");
             
             doorStatusBtn.onclick = function() {
-                doorStatusModal.style.display = "block";
+                doorStatusModal.style.display = "flex"; // Use flex for centering
             }
             
             passengerListBtn.onclick = function() {
-                passengerListModal.style.display = "block";
+                passengerListModal.style.display = "flex";
             }
             
-            lightMonitorBtn.onclick = function() {
-                lightMonitorModal.style.display = "block";
+            lightStatusBtn.onclick = function() { // Changed event listener
+                lightStatusModal.style.display = "flex";
+            }
+
+            driverAnnouncementBtn.onclick = function() { // New event listener
+                driverAnnouncementModal.style.display = "flex";
             }
             
             // Close modals when clicking on X
@@ -413,10 +541,93 @@
                 if (event.target == passengerListModal) {
                     passengerListModal.style.display = "none";
                 }
-                if (event.target == lightMonitorModal) {
-                    lightMonitorModal.style.display = "none";
+                if (event.target == lightStatusModal) {
+                    lightStatusModal.style.display = "none";
+                }
+                if (event.target == driverAnnouncementModal) {
+                    driverAnnouncementModal.style.display = "none";
                 }
             }
+
+            // Function to simulate real-time data and update dashboard
+            function updateBusData() {
+                // Simulate data
+                const speed = Math.floor(Math.random() * 80) + 10; // 10-90 km/jam
+                const latitude = -6.917464 + (Math.random() - 0.5) * 0.05; // Bandung area
+                const longitude = 107.619123 + (Math.random() - 0.5) * 0.05;
+                const engineTemp = Math.floor(Math.random() * (100 - 70 + 1)) + 70; // 70-100°C
+                const cabinTemp = Math.floor(Math.random() * (30 - 20 + 1)) + 20; // 20-30°C
+                const announcements = [
+                    "Selamat datang para penumpang. Bus akan segera berangkat. Mohon siapkan karcis atau kartu pembayaran Anda. Terima kasih.",
+                    "Perhatian, halte selanjutnya adalah Terminal Leuwi Panjang. Bagi penumpang yang akan turun, harap bersiap.",
+                    "Mohon jaga kebersihan dan keamanan di dalam bus. Terima kasih atas kerja samanya.",
+                    "Mohon maaf atas keterlambatan, ada sedikit kemacetan di depan. Terima kasih atas pengertiannya.",
+                    "Bagi penumpang yang merasa tidak enak badan, silakan beritahu pengemudi atau petugas.",
+                    "Perjalanan akan dilanjutkan setelah istirahat singkat di rest area."
+                ];
+                const randomAnnouncement = announcements[Math.floor(Math.random() * announcements.length)];
+
+
+                // Update dashboard info
+                document.getElementById("busSpeed").textContent = `${speed} km/jam`;
+                document.getElementById("engineTemp").textContent = `${engineTemp} °C`;
+                document.getElementById("cabinTemp").textContent = `${cabinTemp} °C`;
+                document.getElementById("announcementText").textContent = randomAnnouncement;
+
+                // Update location and translate to geolocation name
+                document.getElementById("busLocation").textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+                getGeolocationName(latitude, longitude).then(locationName => {
+                    document.getElementById("busLocation").textContent = `${locationName} (${latitude.toFixed(6)}, ${longitude.toFixed(6)})`;
+                }).catch(error => {
+                    console.error("Error getting geolocation name:", error);
+                    document.getElementById("busLocation").textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
+                });
+
+                // Simulate door status changes
+                const doorStatuses = ["Open", "Closed"];
+                document.getElementById("frontDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+                document.getElementById("middleDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+                document.getElementById("rearDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+
+                // Simulate light status changes
+                const lightStates = ["On", "Off"];
+                document.getElementById("interiorLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+                document.getElementById("headlights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+                document.getElementById("brakeLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+                document.getElementById("turnSignals").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+                document.getElementById("emergencyLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+
+                 // Simulate passenger changes
+                document.getElementById("totalPassengers").textContent = Math.floor(Math.random() * 50) + 1; // 1-50 passengers
+                document.getElementById("seatedPassengers").textContent = Math.floor(Math.random() * 40) + 1;
+                document.getElementById("standingPassengers").textContent = Math.floor(Math.random() * 10) + 1;
+                document.getElementById("specialNeedsPassengers").textContent = Math.floor(Math.random() * 3);
+            }
+
+            // Function to translate coordinates to geolocation name (using OpenCage Geocoding API)
+            async function getGeolocationName(lat, lon) {
+                // IMPORTANT: Replace 'YOUR_OPENCAGE_API_KEY' with your actual OpenCage API Key
+                // You can get a free API key at https://opencagedata.com/
+                const apiKey = 'YOUR_OPENCAGE_API_KEY'; 
+                const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&pretty=1`;
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.results && data.results.length > 0) {
+                        return data.results[0].formatted;
+                    } else {
+                        return "Lokasi tidak diketahui";
+                    }
+                } catch (error) {
+                    console.error("Error fetching geolocation:", error);
+                    return "Error fetching location";
+                }
+            }
+
+            // Update data every 3 seconds
+            setInterval(updateBusData, 3000);
+            updateBusData(); // Initial call to populate data
         </script>
     </body>
 </html>
