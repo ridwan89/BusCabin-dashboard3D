@@ -24,7 +24,7 @@
             }
 
             body {
-                overflow: hidden;
+                overflow: hidden; /* Prevent body scroll */
                 margin: 0;
                 background-color: var(--bg-color);
                 color: var(--text-color);
@@ -66,36 +66,38 @@
                 display: flex;
                 flex-direction: column; 
                 width: 100%;
-                height: 100%;
+                height: 100%; /* Make app container fill available height */
                 background-color: var(--card-bg);
                 border-radius: var(--border-radius);
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-                overflow: hidden; /* For rounded corners */
+                overflow: hidden; /* For rounded corners and preventing internal overflow */
             }
 
             /* Main Content Area */
             #mainContent {
                 display: flex;
-                flex-grow: 1; /* Occupy remaining space */
+                flex-grow: 1; /* Occupy remaining space in appContainer */
                 padding: var(--padding-unit);
                 gap: var(--padding-unit); /* Gap between columns */
-                height: 100%; /* Ensure it fills parent height */
+                height: 100%; /* Ensure it fills parent height from flex-grow */
+                box-sizing: border-box; /* Include padding in height */
             }
 
             #leftColumn, #centerColumn, #rightColumn {
                 display: flex;
                 flex-direction: column;
                 gap: var(--padding-unit);
+                flex: 1; /* Make all columns take equal width initially */
+                overflow-y: auto; /* Allow scrolling within columns if content is too long */
+                max-height: 100%; /* Ensure they don't grow beyond parent height */
             }
 
+            /* Adjust column widths */
             #leftColumn {
-                flex: 1.1; 
-            }
-            #centerColumn {
-                flex: 1; 
+                flex: 1.1; /* Slightly wider */
             }
             #rightColumn {
-                flex: 1.5; /* Largest for 3D model */
+                flex: 1.5; /* Widest for 3D model */
             }
 
             .card {
@@ -105,8 +107,8 @@
                 padding: var(--padding-unit);
                 display: flex;
                 flex-direction: column;
-                flex-grow: 1; /* Make all cards grow to fill available space */
-                min-height: fit-content; /* Allow card to shrink if content is small but grow if needed */
+                flex-grow: 1; /* Make all cards grow to fill available space in their column */
+                min-height: 0; /* Allow cards to shrink if needed, crucial for flex-grow */
             }
 
             .card-header {
@@ -131,7 +133,7 @@
 
             /* Location Live Card */
             #locationLiveCard {
-                /* Removed fixed height. Let flex-grow handle it. */
+                min-height: 250px; /* Give a reasonable minimum height */
             }
             #mapPlaceholder {
                 flex-grow: 1; /* Allows it to take available space */
@@ -171,8 +173,8 @@
 
             /* Climate Card */
             #climateCard {
-                /* Removed fixed height. Let flex-grow handle it. */
                 justify-content: space-between;
+                min-height: 200px; /* Give a reasonable minimum height */
             }
             #climateCard .current-temp {
                 font-size: 4em;
@@ -215,7 +217,7 @@
 
             /* Driver Info Card (Replaced Music Card) */
             #driverInfoCard {
-                min-height: 150px; /* Minimum height for this card */
+                min-height: 180px; /* Adjusted slightly for content */
             }
             .driver-details {
                 display: flex;
@@ -286,6 +288,7 @@
                 background-color: var(--danger-color);
                 color: white;
                 text-align: center;
+                flex-grow: 0; /* Prevent it from growing too much, let it take natural height */
             }
             #emergencyCard h4 {
                 color: white;
@@ -323,9 +326,10 @@
 
             /* Right Column - Bus Status */
             #busStatusCard {
-                height: 100%; /* Fill remaining height, as it's the only card in this column */
+                height: 100%; /* Fill remaining height of rightColumn */
                 position: relative; /* For 3D model positioning */
                 overflow: hidden; /* To hide parts of 3D model if it goes out of bounds */
+                min-height: 300px; /* Ensure it has a minimum height to display model */
             }
             #busStatusCard h4 {
                 margin-bottom: 10px;
@@ -741,32 +745,13 @@
             const climateStatusElement = document.getElementById("climateStatus");
             const currentTempElement = document.getElementById("currentTemp");
             const windowStatusElement = document.getElementById("windowStatus");
-            const announcementTextElement = document.getElementById("announcementText"); // This is still here for announcement text itself, not a modal
+            // const announcementTextElement = document.getElementById("announcementText"); // Removed as per previous instruction
 
             // Driver/Trip Info Elements
             const driverIdElement = document.getElementById("driverId");
             const tripCodeElement = document.getElementById("tripCode");
             const busRouteElement = document.getElementById("busRoute");
             const poNameElement = document.getElementById("poName");
-
-            // Previous modal-related elements - these are now *not* for modals.
-            // If you want to display these statuses elsewhere, you'd need new elements.
-            // For now, these are just variables for data simulation.
-            // const frontDoorStatusElement = document.getElementById("frontDoorStatus"); // Removed from HTML
-            // const middleDoorStatusElement = document.getElementById("middleDoorStatus"); // Removed from HTML
-            // const rearDoorStatusElement = document.getElementById("rearDoorStatus"); // Removed from HTML
-            // const emergencyExitStatusElement = document.getElementById("emergencyExitStatus"); // Removed from HTML
-
-            // const interiorLightsElement = document.getElementById("interiorLights"); // Removed from HTML
-            // const headlightsElement = document.getElementById("headlights"); // Removed from HTML
-            // const brakeLightsElement = document.getElementById("brakeLights"); // Removed from HTML
-            // const turnSignalsElement = document.getElementById("turnSignals"); // Removed from HTML
-            // const emergencyLightsElement = document.getElementById("emergencyLights"); // Removed from HTML
-
-            // const totalPassengersElement = document.getElementById("totalPassengers"); // Removed from HTML
-            // const seatedPassengersElement = document.getElementById("seatedPassengers"); // Removed from HTML
-            // const standingPassengersElement = document.getElementById("standingPassengers"); // Removed from HTML
-            // const specialNeedsPassengersElement = document.getElementById("specialNeedsPassengers"); // Removed from HTML
 
             // Emergency Toggle
             const emergencyToggle = document.querySelector('.emergency-toggle');
@@ -821,23 +806,11 @@
                 currentTempElement.textContent = `${currentClimateTemp}°C`;
                 windowStatusElement.textContent = randomWindowStatus;
                 
-                // If you want to show announcement text somewhere after removing modal,
-                // you would need a new element to display it.
-                // For now, it just updates the data without displaying it anywhere.
-                // If you want to display it in a fixed card, you'd add a new card
-                // and element for it.
-                // announcementTextElement.textContent = randomAnnouncement; 
-                // For demonstration, let's update a non-existent element if it were there.
-                // Since the modal is gone, this line (or the element itself) is effectively unused
-                // unless you add a new place for announcements on the main dashboard.
-
-
                 // Update Driver/Trip Info
                 driverIdElement.textContent = randomDriverId;
                 tripCodeElement.textContent = randomTripCode;
                 busRouteElement.textContent = randomBusRoute;
                 poNameElement.textContent = randomPoName;
-
 
                 // Update location and translate to geolocation name
                 busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
@@ -847,11 +820,6 @@
                     console.error("Error getting geolocation name:", error);
                     busLocationDetailedElement.textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
                 });
-
-                // Since modal elements are removed, the following lines are also removed:
-                // frontDoorStatusElement.textContent = frontDoorStatus;
-                // frontDoorStatusElement.className = frontDoorStatus.toLowerCase();
-                // ... (and all other modal related updates)
 
                 // Rotate bus model if available
                 if (busModel) {
