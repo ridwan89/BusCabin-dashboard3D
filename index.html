@@ -286,8 +286,6 @@
                 background-color: var(--danger-color);
                 color: white;
                 text-align: center;
-                /* flex-grow: 0; */ /* Don't grow, keep its content size */
-                /* min-height: fit-content; */ /* Allow it to shrink if content is small */
             }
             #emergencyCard h4 {
                 color: white;
@@ -374,96 +372,6 @@
                 height: 100% !important; /* Override default sizing */
                 border-radius: var(--border-radius); /* Match card radius */
                 z-index: 1; /* Below the busStatsDisplay */
-            }
-
-            /* Modal Styles (Adjusted to match new theme) */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1001; /* Higher z-index for modals */
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.5); /* Slightly darker overlay */
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                backdrop-filter: blur(5px); /* Add a subtle blur effect */
-            }
-            
-            .modal-content {
-                background-color: var(--card-bg);
-                padding: var(--padding-unit) * 1.5;
-                border-radius: var(--border-radius);
-                width: 90%;
-                max-width: 500px;
-                box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-                color: var(--text-color);
-                position: relative;
-            }
-            
-            .modal-content h2 {
-                margin-top: 0;
-                margin-bottom: 20px;
-                color: var(--primary-color);
-                text-align: center;
-                font-size: 1.8em;
-                border-bottom: 2px solid var(--border-color);
-                padding-bottom: 10px;
-            }
-
-            .modal-content .status-item {
-                display: flex;
-                justify-content: space-between;
-                padding: 10px 0;
-                border-bottom: 1px solid var(--border-color);
-                align-items: center;
-            }
-
-            .modal-content .status-item:last-child {
-                border-bottom: none;
-            }
-
-            .modal-content .status-item span:first-child {
-                font-weight: 500;
-                color: var(--sub-text-color);
-            }
-            .modal-content .status-item span:last-child {
-                font-weight: 600;
-                color: var(--text-color); /* Default value color */
-            }
-
-            /* Specific status colors for modals */
-            .modal-content .status-item.door-status span:last-child.open { color: var(--secondary-color); }
-            .modal-content .status-item.door-status span:last-child.closed { color: var(--danger-color); }
-            .modal-content .status-item.light-status span:last-child.on { color: var(--secondary-color); }
-            .modal-content .status-item.light-status span:last-child.off { color: var(--sub-text-color); }
-
-            .modal-content .status-item.announcement {
-                text-align: center;
-                font-style: italic;
-                color: var(--text-color);
-                background-color: var(--hover-color);
-                padding: var(--padding-unit);
-                border-radius: var(--border-radius);
-                margin-top: 20px;
-                border: 1px solid var(--border-color);
-            }
-            
-            .close {
-                color: var(--sub-text-color);
-                position: absolute;
-                top: 15px;
-                right: 20px;
-                font-size: 2em;
-                font-weight: bold;
-                cursor: pointer;
-                transition: color 0.2s ease;
-            }
-            
-            .close:hover {
-                color: var(--danger-color);
             }
 
             /* Utility classes */
@@ -605,50 +513,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="doorStatusModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Door Status</h2>
-                <div class="status-item door-status"><span>Front Door:</span> <span id="frontDoorStatus">Closed</span></div>
-                <div class="status-item door-status"><span>Middle Door:</span> <span id="middleDoorStatus">Closed</span></div>
-                <div class="status-item door-status"><span>Rear Door:</span> <span id="rearDoorStatus">Closed</span></div>
-                <div class="status-item"><span>Emergency Exits:</span> <span id="emergencyExitStatus">All Secure</span></div>
-            </div>
-        </div>
-        
-        <div id="passengerListModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Passenger List</h2>
-                <div class="status-item"><span>Total Passengers:</span> <span id="totalPassengers">24</span></div>
-                <div class="status-item"><span>Seated:</span> <span id="seatedPassengers">20</span></div>
-                <div class="status-item"><span>Standing:</span> <span id="standingPassengers">4</span></div>
-                <div class="status-item"><span>Special Needs:</span> <span id="specialNeedsPassengers">2</span></div>
-            </div>
-        </div>
-        
-        <div id="lightStatusModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Light Status</h2>
-                <div class="status-item light-status"><span>Interior Lights:</span> <span id="interiorLights">On</span></div>
-                <div class="status-item light-status"><span>Headlights:</span> <span id="headlights">On</span></div>
-                <div class="status-item light-status"><span>Brake Lights:</span> <span id="brakeLights">Off</span></div>
-                <div class="status-item light-status"><span>Turn Signals:</span> <span id="turnSignals">Off</span></div>
-                <div class="status-item light-status"><span>Emergency Lights:</span> <span id="emergencyLights">Off</span></div>
-            </div>
-        </div>
-
-        <div id="driverAnnouncementModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Driver Announcement</h2>
-                <div class="status-item announcement" id="announcementText">
-                    "Selamat datang para penumpang. Bus akan segera berangkat. Mohon siapkan karcis atau kartu pembayaran Anda. Terima kasih."
                 </div>
             </div>
         </div>
@@ -866,37 +730,6 @@
 
             animate();
             
-            // --- Modal Functionality ---
-            const doorStatusBtn = document.getElementById("doorStatusBtn");
-            const passengerListBtn = document.getElementById("passengerListBtn");
-            const lightStatusBtn = document.getElementById("lightStatusBtn");
-            const driverAnnouncementBtn = document.getElementById("driverAnnouncementBtn");
-
-            const doorStatusModal = document.getElementById("doorStatusModal");
-            const passengerListModal = document.getElementById("passengerListModal");
-            const lightStatusModal = document.getElementById("lightStatusModal");
-            const driverAnnouncementModal = document.getElementById("driverAnnouncementModal");
-            
-            const closeButtons = document.getElementsByClassName("close");
-            
-            doorStatusBtn.onclick = function() { doorStatusModal.style.display = "flex"; }
-            passengerListBtn.onclick = function() { passengerListModal.style.display = "flex"; }
-            lightStatusBtn.onclick = function() { lightStatusModal.style.display = "flex"; }
-            driverAnnouncementBtn.onclick = function() { driverAnnouncementModal.style.display = "flex"; }
-            
-            for (let i = 0; i < closeButtons.length; i++) {
-                closeButtons[i].onclick = function() {
-                    this.parentElement.parentElement.style.display = "none";
-                }
-            }
-            
-            window.onclick = function(event) {
-                if (event.target == doorStatusModal) { doorStatusModal.style.display = "none"; }
-                if (event.target == passengerListModal) { passengerListModal.style.display = "none"; }
-                if (event.target == lightStatusModal) { lightStatusModal.style.display = "none"; }
-                if (event.target == driverAnnouncementModal) { driverAnnouncementModal.style.display = "none"; }
-            }
-
             // --- Dashboard Data Simulation and Geolocation ---
             // Elements for live updates
             const busSpeedElement = document.getElementById("speedometerValue"); // Using speedometer value for speed
@@ -908,7 +741,7 @@
             const climateStatusElement = document.getElementById("climateStatus");
             const currentTempElement = document.getElementById("currentTemp");
             const windowStatusElement = document.getElementById("windowStatus");
-            const announcementTextElement = document.getElementById("announcementText");
+            const announcementTextElement = document.getElementById("announcementText"); // This is still here for announcement text itself, not a modal
 
             // Driver/Trip Info Elements
             const driverIdElement = document.getElementById("driverId");
@@ -916,21 +749,24 @@
             const busRouteElement = document.getElementById("busRoute");
             const poNameElement = document.getElementById("poName");
 
-            const frontDoorStatusElement = document.getElementById("frontDoorStatus");
-            const middleDoorStatusElement = document.getElementById("middleDoorStatus");
-            const rearDoorStatusElement = document.getElementById("rearDoorStatus");
-            const emergencyExitStatusElement = document.getElementById("emergencyExitStatus");
+            // Previous modal-related elements - these are now *not* for modals.
+            // If you want to display these statuses elsewhere, you'd need new elements.
+            // For now, these are just variables for data simulation.
+            // const frontDoorStatusElement = document.getElementById("frontDoorStatus"); // Removed from HTML
+            // const middleDoorStatusElement = document.getElementById("middleDoorStatus"); // Removed from HTML
+            // const rearDoorStatusElement = document.getElementById("rearDoorStatus"); // Removed from HTML
+            // const emergencyExitStatusElement = document.getElementById("emergencyExitStatus"); // Removed from HTML
 
-            const interiorLightsElement = document.getElementById("interiorLights");
-            const headlightsElement = document.getElementById("headlights");
-            const brakeLightsElement = document.getElementById("brakeLights");
-            const turnSignalsElement = document.getElementById("turnSignals");
-            const emergencyLightsElement = document.getElementById("emergencyLights");
+            // const interiorLightsElement = document.getElementById("interiorLights"); // Removed from HTML
+            // const headlightsElement = document.getElementById("headlights"); // Removed from HTML
+            // const brakeLightsElement = document.getElementById("brakeLights"); // Removed from HTML
+            // const turnSignalsElement = document.getElementById("turnSignals"); // Removed from HTML
+            // const emergencyLightsElement = document.getElementById("emergencyLights"); // Removed from HTML
 
-            const totalPassengersElement = document.getElementById("totalPassengers");
-            const seatedPassengersElement = document.getElementById("seatedPassengers");
-            const standingPassengersElement = document.getElementById("standingPassengers");
-            const specialNeedsPassengersElement = document.getElementById("specialNeedsPassengers");
+            // const totalPassengersElement = document.getElementById("totalPassengers"); // Removed from HTML
+            // const seatedPassengersElement = document.getElementById("seatedPassengers"); // Removed from HTML
+            // const standingPassengersElement = document.getElementById("standingPassengers"); // Removed from HTML
+            // const specialNeedsPassengersElement = document.getElementById("specialNeedsPassengers"); // Removed from HTML
 
             // Emergency Toggle
             const emergencyToggle = document.querySelector('.emergency-toggle');
@@ -984,7 +820,17 @@
                 climateStatusElement.textContent = `${randomClimate}: ${currentClimateTemp}°C`;
                 currentTempElement.textContent = `${currentClimateTemp}°C`;
                 windowStatusElement.textContent = randomWindowStatus;
-                announcementTextElement.textContent = randomAnnouncement;
+                
+                // If you want to show announcement text somewhere after removing modal,
+                // you would need a new element to display it.
+                // For now, it just updates the data without displaying it anywhere.
+                // If you want to display it in a fixed card, you'd add a new card
+                // and element for it.
+                // announcementTextElement.textContent = randomAnnouncement; 
+                // For demonstration, let's update a non-existent element if it were there.
+                // Since the modal is gone, this line (or the element itself) is effectively unused
+                // unless you add a new place for announcements on the main dashboard.
+
 
                 // Update Driver/Trip Info
                 driverIdElement.textContent = randomDriverId;
@@ -1002,44 +848,10 @@
                     busLocationDetailedElement.textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
                 });
 
-                // Simulate door status changes
-                const doorStatuses = ["Open", "Closed"];
-                const frontDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
-                const middleDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
-                const rearDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
-
-                frontDoorStatusElement.textContent = frontDoorStatus;
-                frontDoorStatusElement.className = frontDoorStatus.toLowerCase(); // Add class for coloring
-                middleDoorStatusElement.textContent = middleDoorStatus;
-                middleDoorStatusElement.className = middleDoorStatus.toLowerCase();
-                rearDoorStatusElement.textContent = rearDoorStatus;
-                rearDoorStatusElement.className = rearDoorStatus.toLowerCase();
-                emergencyExitStatusElement.textContent = "All Secure"; // Usually fixed
-
-                // Simulate light status changes
-                const lightStates = ["On", "Off"];
-                const interiorLights = lightStates[Math.floor(Math.random() * lightStates.length)];
-                const headlights = lightStates[Math.floor(Math.random() * lightStates.length)];
-                const brakeLights = lightStates[Math.floor(Math.random() * lightStates.length)];
-                const turnSignals = lightStates[Math.floor(Math.random() * lightStates.length)];
-                const emergencyLights = lightStates[Math.floor(Math.random() * lightStates.length)];
-
-                interiorLightsElement.textContent = interiorLights;
-                interiorLightsElement.className = interiorLights.toLowerCase();
-                headlightsElement.textContent = headlights;
-                headlightsElement.className = headlights.toLowerCase();
-                brakeLightsElement.textContent = brakeLights;
-                brakeLightsElement.className = brakeLights.toLowerCase();
-                turnSignalsElement.textContent = turnSignals;
-                turnSignalsElement.className = turnSignals.toLowerCase();
-                emergencyLightsElement.textContent = emergencyLights;
-                emergencyLightsElement.className = emergencyLights.toLowerCase();
-
-                 // Simulate passenger changes
-                totalPassengersElement.textContent = Math.floor(Math.random() * 50) + 1;
-                seatedPassengersElement.textContent = Math.floor(Math.random() * 40) + 1;
-                standingPassengersElement.textContent = Math.floor(Math.random() * 10) + 1;
-                specialNeedsPassengersElement.textContent = Math.floor(Math.random() * 3);
+                // Since modal elements are removed, the following lines are also removed:
+                // frontDoorStatusElement.textContent = frontDoorStatus;
+                // frontDoorStatusElement.className = frontDoorStatus.toLowerCase();
+                // ... (and all other modal related updates)
 
                 // Rotate bus model if available
                 if (busModel) {
