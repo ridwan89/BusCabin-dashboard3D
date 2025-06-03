@@ -10,7 +10,7 @@
             body {
                 overflow: hidden;
                 margin: 0px;
-                background-color: #ffffff; /* Ubah latar belakang body menjadi putih */
+                background-color: #ffffff;
             }
 
             #progressBar {
@@ -21,6 +21,7 @@
                 top: 10px;
                 margin-left: -250px;
                 z-index: 100;
+                transition: opacity 0.5s ease-out;
             }
         </style>       
         <script type="importmap">
@@ -41,35 +42,24 @@
             import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
 
             const scene = new THREE.Scene();
-            // Ubah warna latar belakang scene menjadi putih
             scene.background = new THREE.Color(0xffffff);
 
-            // Hapus axesHelper dan gridHelper untuk tampilan yang bersih
-            // const axesHelper = new THREE.AxesHelper(5);
-            // scene.add(axesHelper);
-            // const gridHelper = new THREE.GridHelper(20, 20, 0x555555, 0x333333);
-            // scene.add(gridHelper);
-
-            // Tambahkan pencahayaan yang lebih merata dan lembut
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Intensitas ambient light lebih tinggi
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambientLight);
 
-            // Tambahkan DirectionalLight dari beberapa arah untuk pencahayaan merata
-            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4); // Intensitas sedikit lebih rendah
+            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4);
             directionalLight1.position.set(5, 10, 7.5);
-            directionalLight1.castShadow = true; // Aktifkan bayangan
+            directionalLight1.castShadow = true;
             scene.add(directionalLight1);
 
-            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3); // Cahaya tambahan dari arah berlawanan
+            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
             directionalLight2.position.set(-5, -10, -7.5);
             scene.add(directionalLight2);
             
-            // HemisphereLight untuk efek langit-bumi yang lembut
             const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.3);
             scene.add(hemisphereLight);
 
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            // Posisi kamera awal bisa disesuaikan, tapi akan diatur ulang oleh bounding box
             camera.position.x = 0;
             camera.position.y = 0;
             camera.position.z = 10;
@@ -77,17 +67,16 @@
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap; // PCFSoftShadowMap untuk bayangan yang lebih lembut
-            renderer.setClearColor(0xffffff, 1); // Warna latar belakang renderer putih
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setClearColor(0xffffff, 1);
             document.body.appendChild(renderer.domElement);
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
-            // Batasi rotasi vertikal agar tidak bisa melihat di bawah objek terlalu jauh
             controls.maxPolarAngle = Math.PI / 2; 
-            controls.enableZoom = false; // Nonaktifkan zoom
-            controls.enablePan = false; // Nonaktifkan pan (opsional)
+            controls.enableZoom = false;
+            controls.enablePan = false;
 
             const progressBar = document.getElementById('progressBar');
 
@@ -95,24 +84,28 @@
             objLoader.load(
                 'https://ridwan89.github.io/3d-web/model.obj',
                 (object) => {
-                    progressBar.style.display = 'none';
+                    // Fade out progress bar
+                    progressBar.style.opacity = '0';
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                    }, 500);
                     
                     // Material abu-abu matte
                     const grayMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xcccccc, // Warna abu-abu yang lebih terang
-                        roughness: 0.8,  // Lebih kasar untuk tampilan matte
-                        metalness: 0.1,  // Tidak ada efek metalik
-                        side: THREE.DoubleSide
+                        color: 0xcccccc,
+                        roughness: 0.8,
+                        metalness: 0.1,
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        opacity: 0
                     });
 
                     object.traverse(function(child) {
                         if (child.isMesh) {
-                            child.material = grayMaterial; // Terapkan material abu-abu
-                            
-                            // Aktifkan shadow untuk model
+                            child.material = grayMaterial;
                             child.castShadow = true;
                             child.receiveShadow = false;
-                            child.geometry.computeVertexNormals(); // For better lighting
+                            child.geometry.computeVertexNormals();
                         }
                     });
                     
@@ -121,20 +114,105 @@
                     const center = box.getCenter(new THREE.Vector3());
                     const size = box.getSize(new THREE.Vector3());
                     
-                    // Posisikan model di tengah
-                    object.position.sub(center); // Pindahkan objek sehingga titik tengahnya di (0,0,0)
+                    object.position.sub(center);
                     
-                    // Sesuaikan kamera berdasarkan ukuran model
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
-                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)); // Jarak kamera yang lebih tepat
-                    cameraZ *= 1.2; // Beri sedikit ruang lebih
+                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+                    cameraZ *= 1.2;
                     
-                    camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ); // Sesuaikan posisi kamera untuk tampilan isometrik
-                    camera.lookAt(0, 0, 0); // Arahkan kamera ke pusat objek
-                    controls.update(); // Update kontrol setelah posisi kamera diatur
+                    // Posisi kamera isometrik akhir
+                    const targetCameraPosition = new THREE.Vector3(
+                        cameraZ * 0.7, 
+                        cameraZ * 0.5, 
+                        cameraZ
+                    );
+                    
+                    // Posisi awal kamera (untuk spin 360°)
+                    const startCameraPosition = new THREE.Vector3(
+                        0, 
+                        0, 
+                        cameraZ * 2.5 // Mulai dari jarak yang lebih jauh
+                    );
+                    
+                    camera.position.copy(startCameraPosition);
+                    camera.lookAt(0, 0, 0);
+                    controls.update();
                     
                     scene.add(object);
+                    
+                    // Animasi spin dan fade in
+                    let opacity = 0;
+                    const spinDuration = 2000; // 2 detik untuk spin 360°
+                    const moveDuration = 1000; // 1 detik untuk bergerak ke posisi isometrik
+                    const totalDuration = spinDuration + moveDuration;
+                    const animationStartTime = Date.now();
+                    
+                    // Variabel untuk menyimpan progress masing-masing animasi
+                    let spinProgress = 0;
+                    let moveProgress = 0;
+                    
+                    const animateIntro = () => {
+                        const elapsed = Date.now() - animationStartTime;
+                        const totalProgress = Math.min(elapsed / totalDuration, 1);
+                        
+                        // Hitung progress untuk masing-masing animasi
+                        if (elapsed < spinDuration) {
+                            // Fase spin 360°
+                            spinProgress = elapsed / spinDuration;
+                            moveProgress = 0;
+                            
+                            // Rotasi kamera mengelilingi sumbu Y (360°)
+                            const angle = spinProgress * Math.PI * 2; // 0 sampai 2π
+                            const radius = cameraZ * 2.5;
+                            camera.position.x = Math.sin(angle) * radius;
+                            camera.position.z = Math.cos(angle) * radius;
+                            camera.position.y = radius * 0.3; // Sedikit elevasi
+                            camera.lookAt(0, 0, 0);
+                            
+                            // Fade in selama spin
+                            opacity = spinProgress * 0.8; // Mencapai 80% opacity saat spin selesai
+                        } else {
+                            // Fase bergerak ke posisi isometrik
+                            spinProgress = 1;
+                            moveProgress = (elapsed - spinDuration) / moveDuration;
+                            
+                            // Interpolasi dari posisi akhir spin ke posisi isometrik
+                            const spinEndPosition = new THREE.Vector3(
+                                Math.sin(Math.PI * 2) * cameraZ * 2.5,
+                                cameraZ * 2.5 * 0.3,
+                                Math.cos(Math.PI * 2) * cameraZ * 2.5
+                            );
+                            
+                            camera.position.lerpVectors(
+                                spinEndPosition,
+                                targetCameraPosition,
+                                moveProgress
+                            );
+                            camera.lookAt(0, 0, 0);
+                            
+                            // Lengkapi fade in (dari 80% ke 100%)
+                            opacity = 0.8 + (moveProgress * 0.2);
+                        }
+                        
+                        // Update material opacity
+                        object.traverse(function(child) {
+                            if (child.isMesh) {
+                                child.material.opacity = opacity;
+                            }
+                        });
+                        
+                        if (totalProgress < 1) {
+                            requestAnimationFrame(animateIntro);
+                        } else {
+                            // Setelah animasi selesai, aktifkan kontrol orbit
+                            controls.enabled = true;
+                        }
+                    };
+                    
+                    // Nonaktifkan kontrol selama animasi
+                    controls.enabled = false;
+                    animateIntro();
                 },
                 (xhr) => {
                     if (xhr.lengthComputable) {
@@ -145,7 +223,10 @@
                 },
                 (error) => {
                     console.error('Error loading OBJ:', error);
-                    progressBar.style.display = 'none';
+                    progressBar.style.opacity = '0';
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                    }, 500);
                 }
             );
 
