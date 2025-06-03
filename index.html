@@ -167,39 +167,98 @@
             transition: background-color 0.2s ease;
         }
 
-        #climateCard {
+        /* Automotive Infographic Styles */
+        #automotiveCard {
             min-height: 200px;
             flex: 1;
         }
-        #climateCard .current-temp {
-            font-size: 4em;
-            font-weight: 600;
-            color: var(--primary-color);
-            text-align: center;
-            margin: 10px 0;
-        }
-        #climateCard .window-status {
-            font-size: 1.1em;
-            color: var(--text-color);
-            text-align: center;
+        
+        .gauge-container {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
-        #climateCard .temp-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: auto;
+        
+        .gauge {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            position: relative;
         }
-        .temp-button {
+        
+        .gauge-speed {
+            max-width: 150px;
+        }
+        
+        .gauge-title {
+            font-size: 0.9em;
+            color: var(--sub-text-color);
+            margin-bottom: 5px;
+        }
+        
+        .gauge-value {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .gauge-unit {
+            font-size: 0.8em;
+            color: var(--sub-text-color);
+        }
+        
+        .gauge-meter {
+            height: 8px;
+            background: linear-gradient(to right, #4CAF50, #FFC107, #F44336);
+            border-radius: 4px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gauge-indicator {
+            position: absolute;
+            top: -4px;
+            width: 2px;
+            height: 16px;
+            background-color: var(--text-color);
+            transform: translateX(-50%);
+            transition: left 0.5s ease-out;
+        }
+        
+        .status-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85em;
+            padding: 5px 10px;
             background-color: var(--hover-color);
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 1.1em;
-            font-weight: 500;
-            cursor: pointer;
-            color: var(--text-color);
-            transition: background-color 0.2s ease, color 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        
+        .status-normal {
+            background-color: #4CAF50;
+        }
+        
+        .status-warning {
+            background-color: #FFC107;
+        }
+        
+        .status-danger {
+            background-color: #F44336;
         }
 
         #driverInfoCard {
@@ -326,20 +385,69 @@
                     </div>
                 </div>
 
-                <div id="climateCard" class="card">
+                <div id="automotiveCard" class="card">
                     <div class="card-header">
-                        <h4>Climate <span id="climateStatus">Cloudless: 17°C</span></h4>
+                        <h4>Bus Performance</h4>
                         <span class="more-options">...</span>
                     </div>
-                    <div class="text-center">
-                        <span class="icon" style="font-size: 3em; color: var(--primary-color);">☀️</span>
-                        <div class="current-temp" id="currentTemp">16°C</div>
-                        <div class="window-status" id="windowStatus">Window Closed</div>
+                    
+                    <div class="gauge-container">
+                        <div class="gauge gauge-speed">
+                            <div class="gauge-title">Speed</div>
+                            <div class="gauge-value" id="speedValue">0</div>
+                            <div class="gauge-unit">km/h</div>
+                            <div class="gauge-meter">
+                                <div class="gauge-indicator" id="speedIndicator" style="left: 0%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="gauge">
+                            <div class="gauge-title">Engine Temp</div>
+                            <div class="gauge-value" id="engineTempValue">--</div>
+                            <div class="gauge-unit">°C</div>
+                            <div class="gauge-meter">
+                                <div class="gauge-indicator" id="engineTempIndicator" style="left: 50%;"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="temp-controls">
-                        <button class="temp-button">10°C</button>
-                        <button class="temp-button active">20°C</button>
-                        <button class="temp-button">40°C</button>
+                    
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <div class="gauge-title">RPM</div>
+                            <div class="gauge-value" id="rpmValue">0</div>
+                            <div class="gauge-unit">x1000</div>
+                            <div class="gauge-meter">
+                                <div class="gauge-indicator" id="rpmIndicator" style="left: 30%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="gauge">
+                            <div class="gauge-title">Fuel Level</div>
+                            <div class="gauge-value" id="fuelValue">--</div>
+                            <div class="gauge-unit">%</div>
+                            <div class="gauge-meter">
+                                <div class="gauge-indicator" id="fuelIndicator" style="left: 75%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <span class="status-icon status-normal"></span>
+                            <span>Engine</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-icon status-normal"></span>
+                            <span>Brakes</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-icon status-warning"></span>
+                            <span>Tire Pressure</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-icon status-normal"></span>
+                            <span>Battery</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -673,13 +781,20 @@
         const busTimeElement = document.getElementById("busTime");
         const engineTempElement = document.getElementById("engineTemp");
         const cabinTempElement = document.getElementById("cabinTemp");
-        const climateStatusElement = document.getElementById("climateStatus");
-        const currentTempElement = document.getElementById("currentTemp");
-        const windowStatusElement = document.getElementById("windowStatus");
         const driverIdElement = document.getElementById("driverId");
         const tripCodeElement = document.getElementById("tripCode");
         const busRouteElement = document.getElementById("busRoute");
         const poNameElement = document.getElementById("poName");
+
+        // New automotive elements
+        const speedValueElement = document.getElementById("speedValue");
+        const speedIndicatorElement = document.getElementById("speedIndicator");
+        const engineTempValueElement = document.getElementById("engineTempValue");
+        const engineTempIndicatorElement = document.getElementById("engineTempIndicator");
+        const rpmValueElement = document.getElementById("rpmValue");
+        const rpmIndicatorElement = document.getElementById("rpmIndicator");
+        const fuelValueElement = document.getElementById("fuelValue");
+        const fuelIndicatorElement = document.getElementById("fuelIndicator");
 
         const emergencyToggle = document.querySelector('.emergency-toggle');
         emergencyToggle.addEventListener('click', () => {
@@ -694,11 +809,8 @@
             const cabinTemp = Math.floor(Math.random() * (30 - 20 + 1)) + 20;
             const randomDistance = (Math.random() * 10).toFixed(1);
             const randomTime = Math.floor(Math.random() * 30) + 5;
-            const climateOptions = ["Cloudless", "Rainy", "Sunny", "Partly Cloudy"];
-            const randomClimate = climateOptions[Math.floor(Math.random() * climateOptions.length)];
-            const currentClimateTemp = Math.floor(Math.random() * (35 - 15 + 1)) + 15;
-            const windowStatuses = ["Window Open", "Window Closed"];
-            const randomWindowStatus = windowStatuses[Math.floor(Math.random() * windowStatuses.length)];
+            const rpm = (Math.random() * 3 + 1).toFixed(1);
+            const fuelLevel = Math.floor(Math.random() * 100);
 
             // Update map
             updateBusOnMap(latitude, longitude);
@@ -709,9 +821,19 @@
             busTimeElement.textContent = `${randomTime} min`;
             engineTempElement.textContent = `${engineTemp} °C`;
             cabinTempElement.textContent = `${cabinTemp} °C`;
-            climateStatusElement.textContent = `${randomClimate}: ${currentClimateTemp}°C`;
-            currentTempElement.textContent = `${currentClimateTemp}°C`;
-            windowStatusElement.textContent = randomWindowStatus;
+            
+            // Update automotive infographic
+            speedValueElement.textContent = speed;
+            speedIndicatorElement.style.left = `${(speed / 120) * 100}%`;
+            
+            engineTempValueElement.textContent = engineTemp;
+            engineTempIndicatorElement.style.left = `${((engineTemp - 70) / 30) * 100}%`;
+            
+            rpmValueElement.textContent = rpm;
+            rpmIndicatorElement.style.left = `${(rpm / 4) * 100}%`;
+            
+            fuelValueElement.textContent = fuelLevel;
+            fuelIndicatorElement.style.left = `${fuelLevel}%`;
             
             // Update location text
             busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
