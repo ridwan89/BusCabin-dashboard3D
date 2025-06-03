@@ -64,7 +64,7 @@
             /* Main Dashboard Container */
             #appContainer {
                 display: flex;
-                flex-direction: column; /* Or just flex if only mainContent inside */
+                flex-direction: column; 
                 width: 100%;
                 height: 100%;
                 background-color: var(--card-bg);
@@ -89,10 +89,10 @@
             }
 
             #leftColumn {
-                flex: 1.1; /* Slightly larger than center */
+                flex: 1.1; 
             }
             #centerColumn {
-                flex: 1; /* Takes 1 part */
+                flex: 1; 
             }
             #rightColumn {
                 flex: 1.5; /* Largest for 3D model */
@@ -105,6 +105,8 @@
                 padding: var(--padding-unit);
                 display: flex;
                 flex-direction: column;
+                flex-grow: 1; /* Make all cards grow to fill available space */
+                min-height: fit-content; /* Allow card to shrink if content is small but grow if needed */
             }
 
             .card-header {
@@ -129,11 +131,10 @@
 
             /* Location Live Card */
             #locationLiveCard {
-                height: 40%; /* Adjust height as needed */
-                position: relative;
+                /* Removed fixed height. Let flex-grow handle it. */
             }
             #mapPlaceholder {
-                flex-grow: 1;
+                flex-grow: 1; /* Allows it to take available space */
                 background-color: #e0e0e0; /* Placeholder for map */
                 border-radius: 10px;
                 display: flex;
@@ -141,7 +142,7 @@
                 justify-content: center;
                 color: var(--sub-text-color);
                 font-style: italic;
-                height: 150px; /* Example height, can be flex-grow: 1 if you want it to expand */
+                min-height: 120px; /* Minimum height for map placeholder */
                 margin-bottom: 10px;
             }
             .location-details {
@@ -170,7 +171,7 @@
 
             /* Climate Card */
             #climateCard {
-                height: 60%; /* Adjust height as needed */
+                /* Removed fixed height. Let flex-grow handle it. */
                 justify-content: space-between;
             }
             #climateCard .current-temp {
@@ -178,6 +179,7 @@
                 font-weight: 600;
                 color: var(--primary-color);
                 text-align: center;
+                margin-top: auto; /* Push to bottom if space allows, or center */
             }
             #climateCard .window-status {
                 font-size: 1.1em;
@@ -189,6 +191,7 @@
                 display: flex;
                 justify-content: center;
                 gap: 15px;
+                margin-top: auto; /* Push to bottom */
             }
             .temp-button {
                 background-color: var(--hover-color);
@@ -210,17 +213,36 @@
                 color: white;
             }
 
-            /* Music Card (Placeholder) */
-            #musicCard {
-                min-height: 150px;
+            /* Driver Info Card (Replaced Music Card) */
+            #driverInfoCard {
+                min-height: 150px; /* Minimum height for this card */
             }
-            .music-player-controls {
+            .driver-details {
                 display: flex;
-                justify-content: space-around;
-                align-items: center;
-                font-size: 1.5em;
-                color: var(--sub-text-color);
+                flex-direction: column;
+                gap: 8px; /* Small gap between detail rows */
+                margin-bottom: 15px;
             }
+            .driver-details .detail-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.95em;
+                padding: 4px 0;
+                border-bottom: 1px dotted var(--border-color); /* Subtle separator */
+            }
+            .driver-details .detail-item:last-child {
+                border-bottom: none;
+            }
+            .driver-details .detail-item strong {
+                color: var(--sub-text-color);
+                font-weight: 500;
+            }
+            .driver-details .detail-item span {
+                font-weight: 600;
+                color: var(--text-color);
+            }
+
 
             /* Control Buttons Grid (Center Column) */
             #controlButtonsGrid {
@@ -264,6 +286,8 @@
                 background-color: var(--danger-color);
                 color: white;
                 text-align: center;
+                /* flex-grow: 0; */ /* Don't grow, keep its content size */
+                /* min-height: fit-content; */ /* Allow it to shrink if content is small */
             }
             #emergencyCard h4 {
                 color: white;
@@ -301,23 +325,25 @@
 
             /* Right Column - Bus Status */
             #busStatusCard {
-                height: 100%; /* Fill remaining height */
+                height: 100%; /* Fill remaining height, as it's the only card in this column */
                 position: relative; /* For 3D model positioning */
                 overflow: hidden; /* To hide parts of 3D model if it goes out of bounds */
             }
             #busStatusCard h4 {
                 margin-bottom: 10px;
+                z-index: 10; /* Ensure header is above 3D model */
+                position: relative;
             }
             #busStatsDisplay {
                 display: flex;
                 justify-content: space-around;
-                align-items: flex-end;
+                align-items: flex-end; /* Align stats to the bottom */
                 margin-top: 10px;
                 position: absolute; /* Position over 3D model */
-                bottom: var(--padding-unit);
+                bottom: var(--padding-unit); /* Distance from bottom of card */
                 left: var(--padding-unit);
                 right: var(--padding-unit);
-                z-index: 10;
+                z-index: 10; /* Ensure it's above the 3D model */
                 background-color: rgba(255, 255, 255, 0.8);
                 padding: 10px 15px;
                 border-radius: var(--border-radius);
@@ -325,56 +351,19 @@
             }
             #busStatsDisplay .stat-item {
                 text-align: center;
+                padding: 0 5px; /* Add slight padding for spacing between items */
             }
             #busStatsDisplay .stat-item strong {
                 display: block;
                 font-size: 0.8em;
                 color: var(--sub-text-color);
+                white-space: nowrap; /* Prevent text wrapping */
             }
             #busStatsDisplay .stat-item span {
                 font-size: 1.5em;
                 font-weight: 600;
                 color: var(--primary-color); /* Speed color */
             }
-            /* You can re-enable and style speedometer needle if desired */
-            /* #speedometerCanvas {
-                width: 150px; 
-                height: 75px;
-                background: conic-gradient(from -90deg at 50% 100%, #e0e0e0 0%, #e0e0e0 50%, transparent 50%, transparent 100%);
-                border-radius: 50% / 100% 100% 0 0;
-                position: relative;
-                overflow: hidden;
-                margin: 0 auto;
-            }
-            #speedometerNeedle {
-                position: absolute;
-                bottom: 0;
-                left: 50%;
-                width: 2px;
-                height: 60px; 
-                background-color: var(--danger-color);
-                transform-origin: bottom center;
-                transform: translateX(-50%) rotate(0deg); 
-                transition: transform 0.5s ease-out;
-            }
-            #speedometerValue {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 1.8em;
-                font-weight: 700;
-                color: var(--primary-color);
-            }
-            #speedometerUnit {
-                position: absolute;
-                top: 70%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 0.8em;
-                color: var(--sub-text-color);
-            } */
-
 
             /* Three.js canvas styling */
             canvas {
@@ -534,21 +523,16 @@
                 </div>
 
                 <div id="centerColumn">
-                    <div id="musicCard" class="card">
+                    <div id="driverInfoCard" class="card">
                         <div class="card-header">
-                            <h4>Now Playing</h4>
+                            <h4>Perjalanan Bus</h4>
                             <span class="more-options">...</span>
                         </div>
-                        <div class="text-center" style="margin-bottom: 15px;">
-                            <img src="https://via.placeholder.com/60/5b6fef/ffffff?text=♪" alt="Album Art" style="border-radius: 10px; margin-bottom: 10px;">
-                            <p style="margin: 0; font-weight: 600;">The Dark Shape</p>
-                            <p style="margin: 0; font-size: 0.9em; color: var(--sub-text-color);">@empolyeye</p>
-                        </div>
-                        <div class="music-player-controls">
-                            <span>⏮️</span>
-                            <span>▶️</span>
-                            <span>⏭️</span>
-                            <span>🔊</span>
+                        <div class="driver-details">
+                            <div class="detail-item"><strong>ID Driver:</strong> <span id="driverId">DRV-001</span></div>
+                            <div class="detail-item"><strong>Kode Perjalanan:</strong> <span id="tripCode">TRP-JKT-BDG-001</span></div>
+                            <div class="detail-item"><strong>Jurusan Bus:</strong> <span id="busRoute">Jakarta - Bandung</span></div>
+                            <div class="detail-item"><strong>Nama PO:</strong> <span id="poName">Bus Indah Abadi</span></div>
                         </div>
                     </div>
 
@@ -926,6 +910,12 @@
             const windowStatusElement = document.getElementById("windowStatus");
             const announcementTextElement = document.getElementById("announcementText");
 
+            // Driver/Trip Info Elements
+            const driverIdElement = document.getElementById("driverId");
+            const tripCodeElement = document.getElementById("tripCode");
+            const busRouteElement = document.getElementById("busRoute");
+            const poNameElement = document.getElementById("poName");
+
             const frontDoorStatusElement = document.getElementById("frontDoorStatus");
             const middleDoorStatusElement = document.getElementById("middleDoorStatus");
             const rearDoorStatusElement = document.getElementById("rearDoorStatus");
@@ -973,6 +963,17 @@
                 const windowStatuses = ["Window Open", "Window Closed"];
                 const randomWindowStatus = windowStatuses[Math.floor(Math.random() * windowStatuses.length)];
 
+                // Simulate Driver/Trip Data
+                const driverIds = ["DRV-001", "DRV-002", "DRV-003"];
+                const tripCodes = ["TRP-JKT-BDG-001", "TRP-SUB-SBY-002", "TRP-DPS-MLG-003"];
+                const busRoutes = ["Jakarta - Bandung", "Surabaya - Banyuwangi", "Denpasar - Malang"];
+                const poNames = ["Bus Indah Abadi", "Majestic Trans", "Prima Jaya"];
+
+                const randomDriverId = driverIds[Math.floor(Math.random() * driverIds.length)];
+                const randomTripCode = tripCodes[Math.floor(Math.random() * tripCodes.length)];
+                const randomBusRoute = busRoutes[Math.floor(Math.random() * busRoutes.length)];
+                const randomPoName = poNames[Math.floor(Math.random() * poNames.length)];
+
 
                 // Update dashboard info
                 busSpeedElement.textContent = speed;
@@ -984,6 +985,13 @@
                 currentTempElement.textContent = `${currentClimateTemp}°C`;
                 windowStatusElement.textContent = randomWindowStatus;
                 announcementTextElement.textContent = randomAnnouncement;
+
+                // Update Driver/Trip Info
+                driverIdElement.textContent = randomDriverId;
+                tripCodeElement.textContent = randomTripCode;
+                busRouteElement.textContent = randomBusRoute;
+                poNameElement.textContent = randomPoName;
+
 
                 // Update location and translate to geolocation name
                 busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
@@ -1032,14 +1040,6 @@
                 seatedPassengersElement.textContent = Math.floor(Math.random() * 40) + 1;
                 standingPassengersElement.textContent = Math.floor(Math.random() * 10) + 1;
                 specialNeedsPassengersElement.textContent = Math.floor(Math.random() * 3);
-
-                // Update speedometer needle rotation (if visual speedometer is enabled in HTML/CSS)
-                // const speedometerNeedle = document.getElementById('speedometerNeedle');
-                // if (speedometerNeedle) {
-                //     // Map speed (0-90) to rotation (0-180 degrees)
-                //     const rotation = (speed / 90) * 180;
-                //     speedometerNeedle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
-                // }
 
                 // Rotate bus model if available
                 if (busModel) {
