@@ -23,16 +23,21 @@
                 --padding-unit: 20px;
             }
 
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
             body {
-                overflow: hidden; /* Prevent body scroll */
+                overflow: hidden;
                 margin: 0;
                 background-color: var(--bg-color);
                 color: var(--text-color);
                 font-family: 'Poppins', sans-serif;
                 display: flex;
                 height: 100vh;
-                padding: var(--padding-unit); /* Overall padding around the dashboard */
-                box-sizing: border-box; /* Include padding in element's total width and height */
+                padding: var(--padding-unit);
             }
 
             #progressBar {
@@ -46,7 +51,7 @@
                 transition: opacity 0.5s ease-out;
                 background-color: rgba(0, 0, 0, 0.2);
                 border-radius: 5px;
-                overflow: hidden; /* Ensure fill stays within bounds */
+                overflow: hidden;
             }
             #progressBar::-webkit-progress-bar {
                 background-color: transparent;
@@ -66,38 +71,46 @@
                 display: flex;
                 flex-direction: column; 
                 width: 100%;
-                height: 100%; /* Make app container fill available height */
+                height: 100%;
                 background-color: var(--card-bg);
                 border-radius: var(--border-radius);
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-                overflow: hidden; /* For rounded corners and preventing internal overflow */
+                overflow: hidden;
             }
 
             /* Main Content Area */
             #mainContent {
                 display: flex;
-                flex-grow: 1; /* Occupy remaining space in appContainer */
+                flex-grow: 1;
                 padding: var(--padding-unit);
-                gap: var(--padding-unit); /* Gap between columns */
-                height: 100%; /* Ensure it fills parent height from flex-grow */
-                box-sizing: border-box; /* Include padding in height */
+                gap: var(--padding-unit);
+                height: calc(100% - 60px); /* Account for potential header */
+                overflow: hidden;
             }
 
             #leftColumn, #centerColumn, #rightColumn {
                 display: flex;
                 flex-direction: column;
                 gap: var(--padding-unit);
-                flex: 1; /* Make all columns take equal width initially */
-                overflow-y: auto; /* Allow scrolling within columns if content is too long */
-                max-height: 100%; /* Ensure they don't grow beyond parent height */
+                height: 100%;
+                overflow-y: auto;
+                padding-bottom: var(--padding-unit); /* Space at bottom */
             }
 
             /* Adjust column widths */
             #leftColumn {
-                flex: 1.1; /* Slightly wider */
+                flex: 1.1;
+                min-width: 300px;
             }
+            
+            #centerColumn {
+                flex: 1;
+                min-width: 280px;
+            }
+            
             #rightColumn {
-                flex: 1.5; /* Widest for 3D model */
+                flex: 1.5;
+                min-width: 350px;
             }
 
             .card {
@@ -107,8 +120,7 @@
                 padding: var(--padding-unit);
                 display: flex;
                 flex-direction: column;
-                flex-grow: 1; /* Make all cards grow to fill available space in their column */
-                min-height: 0; /* Allow cards to shrink if needed, crucial for flex-grow */
+                min-height: 0; /* Important for flex children */
             }
 
             .card-header {
@@ -129,22 +141,21 @@
                 cursor: pointer;
             }
 
-            /* Specific Card Styles */
-
             /* Location Live Card */
             #locationLiveCard {
-                min-height: 250px; /* Give a reasonable minimum height */
+                min-height: 250px;
+                flex: 1;
             }
             #mapPlaceholder {
-                flex-grow: 1; /* Allows it to take available space */
-                background-color: #e0e0e0; /* Placeholder for map */
+                flex-grow: 1;
+                background-color: #e0e0e0;
                 border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 color: var(--sub-text-color);
                 font-style: italic;
-                min-height: 120px; /* Minimum height for map placeholder */
+                min-height: 120px;
                 margin-bottom: 10px;
             }
             .location-details {
@@ -173,15 +184,15 @@
 
             /* Climate Card */
             #climateCard {
-                justify-content: space-between;
-                min-height: 200px; /* Give a reasonable minimum height */
+                min-height: 200px;
+                flex: 1;
             }
             #climateCard .current-temp {
                 font-size: 4em;
                 font-weight: 600;
                 color: var(--primary-color);
                 text-align: center;
-                margin-top: auto; /* Push to bottom if space allows, or center */
+                margin: 10px 0;
             }
             #climateCard .window-status {
                 font-size: 1.1em;
@@ -193,7 +204,7 @@
                 display: flex;
                 justify-content: center;
                 gap: 15px;
-                margin-top: auto; /* Push to bottom */
+                margin-top: auto;
             }
             .temp-button {
                 background-color: var(--hover-color);
@@ -215,14 +226,15 @@
                 color: white;
             }
 
-            /* Driver Info Card (Replaced Music Card) */
+            /* Driver Info Card */
             #driverInfoCard {
-                min-height: 180px; /* Adjusted slightly for content */
+                min-height: 180px;
+                flex: 0 0 auto;
             }
             .driver-details {
                 display: flex;
                 flex-direction: column;
-                gap: 8px; /* Small gap between detail rows */
+                gap: 8px;
                 margin-bottom: 15px;
             }
             .driver-details .detail-item {
@@ -231,7 +243,7 @@
                 align-items: center;
                 font-size: 0.95em;
                 padding: 4px 0;
-                border-bottom: 1px dotted var(--border-color); /* Subtle separator */
+                border-bottom: 1px dotted var(--border-color);
             }
             .driver-details .detail-item:last-child {
                 border-bottom: none;
@@ -245,13 +257,13 @@
                 color: var(--text-color);
             }
 
-
-            /* Control Buttons Grid (Center Column) */
+            /* Control Buttons Grid */
             #controlButtonsGrid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
-                flex-grow: 1; /* Allow to fill space */
+                flex: 1;
+                min-height: 0;
             }
             .grid-btn {
                 background-color: var(--hover-color);
@@ -267,7 +279,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                min-height: 100px; /* Ensure consistent size */
+                min-height: 100px;
             }
             .grid-btn .icon {
                 font-size: 2em;
@@ -280,7 +292,7 @@
                 transform: translateY(-3px);
             }
             .grid-btn:hover .icon {
-                color: white; /* Change icon color on hover */
+                color: white;
             }
 
             /* Emergency Card */
@@ -288,7 +300,7 @@
                 background-color: var(--danger-color);
                 color: white;
                 text-align: center;
-                flex-grow: 0; /* Prevent it from growing too much, let it take natural height */
+                flex: 0 0 auto;
             }
             #emergencyCard h4 {
                 color: white;
@@ -305,7 +317,7 @@
                 background-color: rgba(255, 255, 255, 0.2);
                 border-radius: 25px;
                 padding: 5px;
-                width: 80px; /* Fixed width for toggle */
+                width: 80px;
                 margin: 0 auto;
                 cursor: pointer;
             }
@@ -320,32 +332,32 @@
                 background-color: rgba(255, 255, 255, 0.5);
             }
             .emergency-toggle.active .toggle-circle {
-                transform: translateX(40px); /* Move circle to right */
-                background-color: var(--danger-color); /* Red when active */
+                transform: translateX(40px);
+                background-color: var(--danger-color);
             }
 
-            /* Right Column - Bus Status */
+            /* Bus Status Card */
             #busStatusCard {
-                height: 100%; /* Fill remaining height of rightColumn */
-                position: relative; /* For 3D model positioning */
-                overflow: hidden; /* To hide parts of 3D model if it goes out of bounds */
-                min-height: 300px; /* Ensure it has a minimum height to display model */
+                flex: 1;
+                position: relative;
+                overflow: hidden;
+                min-height: 300px;
             }
             #busStatusCard h4 {
                 margin-bottom: 10px;
-                z-index: 10; /* Ensure header is above 3D model */
+                z-index: 10;
                 position: relative;
             }
             #busStatsDisplay {
                 display: flex;
                 justify-content: space-around;
-                align-items: flex-end; /* Align stats to the bottom */
+                align-items: flex-end;
                 margin-top: 10px;
-                position: absolute; /* Position over 3D model */
-                bottom: var(--padding-unit); /* Distance from bottom of card */
+                position: absolute;
+                bottom: var(--padding-unit);
                 left: var(--padding-unit);
                 right: var(--padding-unit);
-                z-index: 10; /* Ensure it's above the 3D model */
+                z-index: 10;
                 background-color: rgba(255, 255, 255, 0.8);
                 padding: 10px 15px;
                 border-radius: var(--border-radius);
@@ -353,35 +365,52 @@
             }
             #busStatsDisplay .stat-item {
                 text-align: center;
-                padding: 0 5px; /* Add slight padding for spacing between items */
+                padding: 0 5px;
             }
             #busStatsDisplay .stat-item strong {
                 display: block;
                 font-size: 0.8em;
                 color: var(--sub-text-color);
-                white-space: nowrap; /* Prevent text wrapping */
+                white-space: nowrap;
             }
             #busStatsDisplay .stat-item span {
                 font-size: 1.5em;
                 font-weight: 600;
-                color: var(--primary-color); /* Speed color */
+                color: var(--primary-color);
             }
 
             /* Three.js canvas styling */
             canvas {
-                position: absolute; /* Position to fill the card */
+                position: absolute;
                 top: 0;
                 left: 0;
-                width: 100% !important; /* Override default sizing */
-                height: 100% !important; /* Override default sizing */
-                border-radius: var(--border-radius); /* Match card radius */
-                z-index: 1; /* Below the busStatsDisplay */
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: var(--border-radius);
+                z-index: 1;
             }
 
             /* Utility classes */
             .text-center { text-align: center; }
             .text-muted { color: var(--sub-text-color); }
             .font-bold { font-weight: 700; }
+
+            /* Scrollbar styling */
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0.05);
+                border-radius: 3px;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 3px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(0, 0, 0, 0.3);
+            }
         </style>        
         <script type="importmap">
             {
