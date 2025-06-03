@@ -11,7 +11,6 @@
                 overflow: hidden;
                 margin: 0px;
                 background-color: #ffffff;
-                font-family: Arial, sans-serif;
             }
 
             #progressBar {
@@ -22,32 +21,6 @@
                 top: 10px;
                 margin-left: -250px;
                 z-index: 100;
-            }
-
-            #controls {
-                position: absolute;
-                top: 50px;
-                left: 10px;
-                background: rgba(255,255,255,0.8);
-                padding: 10px;
-                border-radius: 5px;
-                z-index: 100;
-            }
-
-            button {
-                margin: 5px;
-                padding: 5px 10px;
-                cursor: pointer;
-            }
-
-            .highlight {
-                animation: pulse 1.5s infinite;
-            }
-
-            @keyframes pulse {
-                0% { opacity: 0.5; }
-                50% { opacity: 1; }
-                100% { opacity: 0.5; }
             }
         </style>       
         <script type="importmap">
@@ -61,13 +34,6 @@
     </head>
     <body>
         <progress value="0" max="100" id="progressBar"></progress>
-        <div id="controls">
-            <h3>Model Controls</h3>
-            <button id="highlightWheels">Highlight Wheels</button>
-            <button id="resetColors">Reset Colors</button>
-            <button id="hideDoors">Toggle Doors</button>
-        </div>
-        
         <script type="module">
             import * as THREE from 'three';
             import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -112,23 +78,12 @@
 
             const progressBar = document.getElementById('progressBar');
             let model = null;
-            const originalMaterials = new Map();
 
             // Default material
             const grayMaterial = new THREE.MeshStandardMaterial({
                 color: 0xcccccc,
                 roughness: 0.8,
                 metalness: 0.1,
-                side: THREE.DoubleSide
-            });
-
-            // Highlight material
-            const highlightMaterial = new THREE.MeshStandardMaterial({
-                color: 0xff0000,
-                roughness: 0.5,
-                metalness: 0.5,
-                emissive: 0xff0000,
-                emissiveIntensity: 0.3,
                 side: THREE.DoubleSide
             });
 
@@ -141,14 +96,28 @@
 
                     object.traverse(function(child) {
                         if (child.isMesh) {
-                            // Simpan material asli
-                            originalMaterials.set(child.uuid, child.material);
-                            
                             // Terapkan material default
                             child.material = grayMaterial;
                             child.castShadow = true;
                             child.receiveShadow = false;
                             child.geometry.computeVertexNormals();
+                            
+                            // Daftar bagian yang akan dinonaktifkan
+                            const partsToDisable = ['kaca', 'dek', 'daleman', 'bodi', 'ac', 'sayap', 'gorden'];
+                            
+                            // Nonaktifkan bagian-bagian tertentu
+                            partsToDisable.forEach(partName => {
+                                if (child.name.toLowerCase().includes(partName.toLowerCase())) {
+                                    child.visible = false; // Menyembunyikan bagian
+                                    
+                                    // Alternatif 1: Membuat transparan
+                                    // child.material.transparent = true;
+                                    // child.material.opacity = 0.3;
+                                    
+                                    // Alternatif 2: Mengubah warna
+                                    // child.material.color.set(0xff0000);
+                                }
+                            });
                         }
                     });
                     
@@ -169,9 +138,6 @@
                     controls.update();
                     
                     scene.add(object);
-
-                    // Setup UI event listeners after model loads
-                    setupControls();
                 },
                 (xhr) => {
                     if (xhr.lengthComputable) {
@@ -185,41 +151,6 @@
                     progressBar.style.display = 'none';
                 }
             );
-
-            function setupControls() {
-                document.getElementById('highlightWheels').addEventListener('click', () => {
-                    if (!model) return;
-                    
-                    model.traverse(child => {
-                        if (child.isMesh && child.name.toLowerCase().includes('wheel')) {
-                            child.material = highlightMaterial;
-                            child.userData.originalMaterial = originalMaterials.get(child.uuid);
-                            child.addHighlight = true;
-                        }
-                    });
-                });
-
-                document.getElementById('resetColors').addEventListener('click', () => {
-                    if (!model) return;
-                    
-                    model.traverse(child => {
-                        if (child.isMesh && originalMaterials.has(child.uuid)) {
-                            child.material = originalMaterials.get(child.uuid);
-                            child.removeHighlight = true;
-                        }
-                    });
-                });
-
-                document.getElementById('hideDoors').addEventListener('click', () => {
-                    if (!model) return;
-                    
-                    model.traverse(child => {
-                        if (child.isMesh && child.name.toLowerCase().includes('door')) {
-                            child.visible = !child.visible;
-                        }
-                    });
-                });
-            }
 
             function onWindowResize() {
                 camera.aspect = window.innerWidth / window.innerHeight;
