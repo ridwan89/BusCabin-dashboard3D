@@ -6,188 +6,500 @@
         <meta name="author" content="Ridwan Syarif Setiawan" />
         <title>Bus Intelligence Core</title>
         <meta name="description" content="Three.js">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
+            :root {
+                --bg-color: #f0f2f5; /* Light background similar to template */
+                --card-bg: #ffffff; /* Card background */
+                --text-color: #333;
+                --sub-text-color: #888;
+                --primary-color: #5b6fef; /* Purple accent */
+                --secondary-color: #5be9b9; /* Green accent */
+                --warning-color: #ff9800; /* Orange/Yellow accent */
+                --danger-color: #f44336; /* Red accent */
+                --border-color: #e0e0e0;
+                --hover-color: #f5f5f5;
+                --border-radius: 18px; /* More rounded corners */
+                --padding-unit: 20px;
+            }
+
             body {
                 overflow: hidden;
-                margin: 0px;
-                background-color: #2c3e50; /* Dark blue-grey for a modern feel */
-                color: #ecf0f1; /* Light grey for contrast */
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                font-family: 'Poppins', sans-serif;
                 display: flex;
-                flex-direction: column; /* Arrange content vertically */
-                height: 100vh; /* Full viewport height */
+                height: 100vh;
+                padding: var(--padding-unit); /* Overall padding around the dashboard */
+                box-sizing: border-box; /* Include padding in element's total width and height */
             }
 
             #progressBar {
-                width: 500px;
-                height: 24px;
+                width: 400px;
+                height: 10px;
                 position: absolute;
                 left: 50%;
-                top: 10px;
-                margin-left: -250px;
-                z-index: 100;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 1000;
                 transition: opacity 0.5s ease-out;
-                background-color: #34495e;
+                background-color: rgba(0, 0, 0, 0.2);
                 border-radius: 5px;
+                overflow: hidden; /* Ensure fill stays within bounds */
             }
             #progressBar::-webkit-progress-bar {
-                background-color: #34495e;
-                border-radius: 5px;
+                background-color: transparent;
             }
             #progressBar::-webkit-progress-value {
-                background-color: #27ae60;
+                background-color: var(--primary-color);
                 border-radius: 5px;
+                transition: width 0.3s ease-out;
             }
             #progressBar::-moz-progress-bar {
-                background-color: #27ae60;
+                background-color: var(--primary-color);
                 border-radius: 5px;
             }
             
-            /* Header Dashboard */
-            #headerDashboard {
-                width: calc(100% - 40px); /* Full width minus side padding */
-                background-color: rgba(44, 62, 80, 0.9);
-                padding: 15px 20px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-                z-index: 100;
+            /* Main Dashboard Container */
+            #appContainer {
                 display: flex;
-                justify-content: space-around; /* Distribute items evenly */
-                align-items: center;
-                border-bottom-left-radius: 15px;
-                border-bottom-right-radius: 15px;
-                margin-bottom: 20px; /* Space between header and 3D model */
-                flex-shrink: 0; /* Prevent it from shrinking */
-            }
-
-            .header-info-item {
-                text-align: center;
-                flex-grow: 1; /* Allows items to grow and fill space */
-                padding: 0 10px;
-            }
-
-            .header-info-item strong {
-                display: block; /* Make label appear above value */
-                font-size: 0.9em;
-                color: #bdc3c7;
-                margin-bottom: 5px;
-            }
-
-            .header-info-item span {
-                font-size: 1.4em;
-                font-weight: bold;
-                color: #27ae60; /* Green accent for values */
-            }
-
-            /* Main content area (for 3D model) */
-            #mainContent {
-                flex-grow: 1; /* Takes up remaining space */
-                position: relative; /* For the 3D canvas */
-            }
-
-            /* Control Panel (right side) */
-            #controlPanel {
-                position: absolute;
-                top: 0; /* Position relative to mainContent */
-                right: 20px;
-                background-color: rgba(44, 62, 80, 0.8);
-                border-radius: 15px;
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-                padding: 25px;
-                z-index: 100;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                max-width: 300px;
-                border: 1px solid rgba(52, 73, 94, 0.7);
-            }
-            
-            #controlPanel h3 {
-                margin-top: 0;
-                margin-bottom: 20px;
-                color: #ecf0f1;
-                text-align: center;
-                font-size: 1.8em;
-                letter-spacing: 1px;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            }
-            
-            .control-btn {
-                display: block;
+                flex-direction: column;
                 width: 100%;
-                padding: 12px 15px;
-                margin-bottom: 12px;
-                background-color: #3498db;
+                height: 100%;
+                background-color: var(--card-bg);
+                border-radius: var(--border-radius);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+                overflow: hidden; /* For rounded corners */
+            }
+
+            /* Top Bar (Header) */
+            #topBar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px var(--padding-unit);
+                border-bottom: 1px solid var(--border-color);
+                flex-shrink: 0; /* Prevent shrinking */
+                background-color: var(--card-bg);
+            }
+
+            .top-bar-left, .top-bar-right, .top-bar-center {
+                display: flex;
+                align-items: center;
+            }
+
+            .top-bar-button {
+                background: none;
+                border: none;
+                padding: 8px 12px;
+                margin-right: 5px;
+                font-size: 1.2em;
+                cursor: pointer;
+                color: var(--sub-text-color);
+                border-radius: 10px;
+                transition: background-color 0.2s ease, color 0.2s ease;
+            }
+            .top-bar-button:hover {
+                background-color: var(--hover-color);
+                color: var(--text-color);
+            }
+
+            .top-bar-button.active {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .search-bar {
+                display: flex;
+                align-items: center;
+                background-color: var(--hover-color);
+                border-radius: 10px;
+                padding: 8px 15px;
+                margin-left: 20px;
+            }
+            .search-bar input {
+                border: none;
+                background: none;
+                outline: none;
+                font-size: 1em;
+                color: var(--text-color);
+                padding-left: 5px;
+            }
+            .search-bar input::placeholder {
+                color: var(--sub-text-color);
+            }
+
+            .user-profile {
+                display: flex;
+                align-items: center;
+                margin-left: 20px;
+                cursor: pointer;
+            }
+            .user-profile img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+            .user-profile span {
+                font-weight: 500;
+            }
+
+            /* Main Content Area */
+            #mainContent {
+                display: flex;
+                flex-grow: 1; /* Occupy remaining space */
+                padding: var(--padding-unit);
+                gap: var(--padding-unit); /* Gap between columns */
+            }
+
+            #leftColumn, #centerColumn, #rightColumn {
+                display: flex;
+                flex-direction: column;
+                gap: var(--padding-unit);
+            }
+
+            #leftColumn {
+                flex: 1; /* Takes 1 part of available space */
+            }
+            #centerColumn {
+                flex: 1; /* Takes 1 part */
+            }
+            #rightColumn {
+                flex: 1; /* Takes 1 part */
+            }
+
+            .card {
+                background-color: var(--card-bg);
+                border-radius: var(--border-radius);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                padding: var(--padding-unit);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+            .card-header h4 {
+                margin: 0;
+                font-size: 1.2em;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+            .card-header .more-options {
+                font-size: 1.5em;
+                color: var(--sub-text-color);
+                cursor: pointer;
+            }
+
+            /* Specific Card Styles */
+
+            /* Location Live Card */
+            #locationLiveCard {
+                height: 40%; /* Adjust height as needed */
+                position: relative;
+            }
+            #mapPlaceholder {
+                flex-grow: 1;
+                background-color: #e0e0e0; /* Placeholder for map */
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--sub-text-color);
+                font-style: italic;
+                height: 150px; /* Example height */
+                margin-bottom: 10px;
+            }
+            .location-details {
+                font-size: 0.9em;
+                color: var(--sub-text-color);
+            }
+            .location-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+            }
+            .share-now-btn {
+                background-color: var(--primary-color);
                 color: white;
                 border: none;
-                border-radius: 8px;
+                padding: 8px 15px;
+                border-radius: 10px;
                 cursor: pointer;
+                font-weight: 500;
+                transition: background-color 0.2s ease;
+            }
+            .share-now-btn:hover {
+                background-color: #4a5bd1;
+            }
+
+            /* Climate Card */
+            #climateCard {
+                height: 60%; /* Adjust height as needed */
+                justify-content: space-between;
+            }
+            #climateCard .current-temp {
+                font-size: 4em;
+                font-weight: 600;
+                color: var(--primary-color);
+                text-align: center;
+            }
+            #climateCard .window-status {
                 font-size: 1.1em;
-                font-weight: bold;
-                transition: background-color 0.3s ease, transform 0.1s ease;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+                color: var(--text-color);
+                text-align: center;
+                margin-bottom: 20px;
             }
-            
-            .control-btn:hover {
-                background-color: #2980b9;
-                transform: translateY(-2px);
+            #climateCard .temp-controls {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
             }
-            
-            .control-btn:active {
-                background-color: #2c3e50;
-                transform: translateY(0);
+            .temp-button {
+                background-color: var(--hover-color);
+                border: none;
+                border-radius: 10px;
+                padding: 10px 20px;
+                font-size: 1.1em;
+                font-weight: 500;
+                cursor: pointer;
+                color: var(--text-color);
+                transition: background-color 0.2s ease, color 0.2s ease;
             }
-            
-            .control-btn:last-child {
-                margin-bottom: 0;
+            .temp-button:hover {
+                background-color: var(--primary-color);
+                color: white;
             }
-            
-            /* Modal styles */
+            .temp-button.active {
+                background-color: var(--warning-color);
+                color: white;
+            }
+
+            /* Music Card (Placeholder) */
+            #musicCard {
+                min-height: 150px;
+            }
+            .music-player-controls {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                font-size: 1.5em;
+                color: var(--sub-text-color);
+            }
+
+            /* Control Buttons Grid (Center Column) */
+            #controlButtonsGrid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                flex-grow: 1; /* Allow to fill space */
+            }
+            .grid-btn {
+                background-color: var(--hover-color);
+                border-radius: var(--border-radius);
+                padding: 20px;
+                text-align: center;
+                font-size: 1em;
+                font-weight: 500;
+                color: var(--text-color);
+                cursor: pointer;
+                transition: background-color 0.2s ease, transform 0.1s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100px; /* Ensure consistent size */
+            }
+            .grid-btn .icon {
+                font-size: 2em;
+                margin-bottom: 10px;
+                color: var(--primary-color);
+            }
+            .grid-btn:hover {
+                background-color: var(--primary-color);
+                color: white;
+                transform: translateY(-3px);
+            }
+            .grid-btn:hover .icon {
+                color: white; /* Change icon color on hover */
+            }
+
+            /* Emergency Card */
+            #emergencyCard {
+                background-color: var(--danger-color);
+                color: white;
+                text-align: center;
+            }
+            #emergencyCard h4 {
+                color: white;
+            }
+            #emergencyCard p {
+                font-size: 0.9em;
+                opacity: 0.8;
+                margin-bottom: 15px;
+            }
+            .emergency-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 25px;
+                padding: 5px;
+                width: 80px; /* Fixed width for toggle */
+                margin: 0 auto;
+                cursor: pointer;
+            }
+            .emergency-toggle .toggle-circle {
+                width: 20px;
+                height: 20px;
+                background-color: white;
+                border-radius: 50%;
+                transition: transform 0.3s ease;
+            }
+            .emergency-toggle.active {
+                background-color: rgba(255, 255, 255, 0.5);
+            }
+            .emergency-toggle.active .toggle-circle {
+                transform: translateX(40px); /* Move circle to right */
+                background-color: var(--danger-color); /* Red when active */
+            }
+
+            /* Right Column - Bus Status */
+            #busStatusCard {
+                height: 100%; /* Fill remaining height */
+                position: relative; /* For 3D model positioning */
+                overflow: hidden; /* To hide parts of 3D model if it goes out of bounds */
+            }
+            #busStatusCard h4 {
+                margin-bottom: 10px;
+            }
+            #busStatsDisplay {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+                margin-top: 10px;
+                position: absolute; /* Position over 3D model */
+                bottom: var(--padding-unit);
+                left: var(--padding-unit);
+                right: var(--padding-unit);
+                z-index: 10;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 10px 15px;
+                border-radius: var(--border-radius);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            #busStatsDisplay .stat-item {
+                text-align: center;
+            }
+            #busStatsDisplay .stat-item strong {
+                display: block;
+                font-size: 0.8em;
+                color: var(--sub-text-color);
+            }
+            #busStatsDisplay .stat-item span {
+                font-size: 1.5em;
+                font-weight: 600;
+                color: var(--primary-color); /* Speed color */
+            }
+            #speedometerCanvas {
+                width: 150px; /* Adjust size */
+                height: 75px;
+                /* Background to represent speedometer arc */
+                background: conic-gradient(from -90deg at 50% 100%, #e0e0e0 0%, #e0e0e0 50%, transparent 50%, transparent 100%);
+                border-radius: 50% / 100% 100% 0 0;
+                position: relative;
+                overflow: hidden;
+                margin: 0 auto;
+            }
+            #speedometerNeedle {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 2px;
+                height: 60px; /* Length of needle */
+                background-color: var(--danger-color);
+                transform-origin: bottom center;
+                transform: translateX(-50%) rotate(0deg); /* Initial position */
+                transition: transform 0.5s ease-out;
+            }
+            #speedometerValue {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 1.8em;
+                font-weight: 700;
+                color: var(--primary-color);
+            }
+            #speedometerUnit {
+                position: absolute;
+                top: 70%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 0.8em;
+                color: var(--sub-text-color);
+            }
+
+            /* Three.js canvas styling */
+            canvas {
+                position: absolute; /* Position to fill the card */
+                top: 0;
+                left: 0;
+                width: 100% !important; /* Override default sizing */
+                height: 100% !important; /* Override default sizing */
+                border-radius: var(--border-radius); /* Match card radius */
+            }
+
+            /* Modal Styles (Adjusted to match new theme) */
             .modal {
                 display: none;
                 position: fixed;
-                z-index: 200;
+                z-index: 1001; /* Higher z-index for modals */
                 left: 0;
                 top: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0,0,0,0.6);
+                background-color: rgba(0,0,0,0.5); /* Slightly darker overlay */
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                backdrop-filter: blur(5px); /* Add a subtle blur effect */
             }
             
             .modal-content {
-                background-color: #34495e;
-                margin: auto;
-                padding: 30px;
-                border-radius: 15px;
+                background-color: var(--card-bg);
+                padding: var(--padding-unit) * 1.5;
+                border-radius: var(--border-radius);
                 width: 90%;
-                max-width: 550px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-                color: #ecf0f1;
+                max-width: 500px;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+                color: var(--text-color);
                 position: relative;
-                border: 1px solid rgba(52, 73, 94, 0.7);
             }
             
             .modal-content h2 {
                 margin-top: 0;
                 margin-bottom: 20px;
-                color: #27ae60;
+                color: var(--primary-color);
                 text-align: center;
-                font-size: 1.5em;
-                border-bottom: 2px solid #27ae60;
+                font-size: 1.8em;
+                border-bottom: 2px solid var(--border-color);
                 padding-bottom: 10px;
-            }
-
-            .modal-content p {
-                margin-bottom: 10px;
-                font-size: 1.1em;
-                line-height: 1.6;
             }
 
             .modal-content .status-item {
                 display: flex;
                 justify-content: space-between;
-                padding: 8px 0;
-                border-bottom: 1px dashed rgba(236, 240, 241, 0.2);
+                padding: 10px 0;
+                border-bottom: 1px solid var(--border-color);
+                align-items: center;
             }
 
             .modal-content .status-item:last-child {
@@ -195,37 +507,50 @@
             }
 
             .modal-content .status-item span:first-child {
-                font-weight: bold;
-                color: #bdc3c7;
+                font-weight: 500;
+                color: var(--sub-text-color);
             }
             .modal-content .status-item span:last-child {
-                color: #f1c40f;
+                font-weight: 600;
+                color: var(--text-color); /* Default value color */
             }
+
+            /* Specific status colors for modals */
+            .modal-content .status-item.door-status span:last-child.open { color: var(--secondary-color); }
+            .modal-content .status-item.door-status span:last-child.closed { color: var(--danger-color); }
+            .modal-content .status-item.light-status span:last-child.on { color: var(--secondary-color); }
+            .modal-content .status-item.light-status span:last-child.off { color: var(--sub-text-color); }
+
             .modal-content .status-item.announcement {
                 text-align: center;
                 font-style: italic;
-                color: #ecf0f1;
-                background-color: rgba(39, 174, 96, 0.3);
-                padding: 15px;
-                border-radius: 8px;
+                color: var(--text-color);
+                background-color: var(--hover-color);
+                padding: var(--padding-unit);
+                border-radius: var(--border-radius);
                 margin-top: 20px;
-                border: 1px solid #27ae60;
+                border: 1px solid var(--border-color);
             }
             
             .close {
-                color: #bdc3c7;
+                color: var(--sub-text-color);
                 position: absolute;
                 top: 15px;
                 right: 20px;
-                font-size: 32px;
+                font-size: 2em;
                 font-weight: bold;
                 cursor: pointer;
-                transition: color 0.3s ease;
+                transition: color 0.2s ease;
             }
             
             .close:hover {
-                color: #e74c3c;
+                color: var(--danger-color);
             }
+
+            /* Utility classes */
+            .text-center { text-align: center; }
+            .text-muted { color: var(--sub-text-color); }
+            .font-bold { font-weight: 700; }
         </style>        
         <script type="importmap">
             {
@@ -239,32 +564,154 @@
     <body>
         <progress value="0" max="100" id="progressBar"></progress>
         
-        <div id="headerDashboard">
-            <div class="header-info-item">
-                <strong>Kecepatan Bus</strong>
-                <span id="busSpeed">0 km/jam</span>
+        <div id="appContainer">
+            <div id="topBar">
+                <div class="top-bar-left">
+                    <button class="top-bar-button active">Dashboard</button>
+                    <button class="top-bar-button">🚌 Routes</button>
+                    <button class="top-bar-button">📊 Analytics</button>
+                    <div class="search-bar">
+                        <span class="icon">🔍</span>
+                        <input type="text" placeholder="type to search">
+                    </div>
+                </div>
+                <div class="top-bar-right">
+                    <button class="top-bar-button">⚙️</button>
+                    <button class="top-bar-button">🔔</button>
+                    <button class="top-bar-button">👤</button>
+                    <div class="user-profile">
+                        <img src="https://via.placeholder.com/30/5b6fef/ffffff?text=U" alt="User">
+                        <span>Qclay Admin 🔽</span>
+                    </div>
+                </div>
             </div>
-            <div class="header-info-item">
-                <strong>Lokasi Bus</strong>
-                <span id="busLocation">Loading...</span>
-            </div>
-            <div class="header-info-item">
-                <strong>Suhu Mesin</strong>
-                <span id="engineTemp">-- °C</span>
-            </div>
-            <div class="header-info-item">
-                <strong>Suhu Kabin</strong>
-                <span id="cabinTemp">-- °C</span>
-            </div>
-        </div>
 
-        <div id="mainContent">
-            <div id="controlPanel">
-                <h3>Bus Controls</h3>
-                <button class="control-btn" id="doorStatusBtn">Door Status</button>
-                <button class="control-btn" id="passengerListBtn">Passenger List</button>
-                <button class="control-btn" id="lightStatusBtn">Light Status</button>
-                <button class="control-btn" id="driverAnnouncementBtn">Driver Announcement</button>
+            <div id="mainContent">
+                <div id="leftColumn">
+                    <div id="locationLiveCard" class="card">
+                        <div class="card-header">
+                            <h4>Location Live</h4>
+                            <span class="more-options">...</span>
+                        </div>
+                        <div id="mapPlaceholder">
+                            Map Placeholder (Example: Google Maps / OpenStreetMap)
+                        </div>
+                        <div class="location-details">
+                            <p><strong>Lokasi Bus:</strong> <span id="busLocationDetailed">Loading...</span></p>
+                            <p><span>Jarak:</span> <span id="busDistance">0 Km</span> • <span>Waktu:</span> <span id="busTime">0 min</span></p>
+                        </div>
+                        <div class="location-actions">
+                            <button class="share-now-btn">Share now</button>
+                            <span><span class="icon">📍</span> 9 Km</span>
+                        </div>
+                    </div>
+
+                    <div id="climateCard" class="card">
+                        <div class="card-header">
+                            <h4>Climate <span id="climateStatus">Cloudless: 17°C</span></h4>
+                            <span class="more-options">...</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="icon" style="font-size: 3em; color: var(--primary-color);">☀️</span>
+                            <div class="current-temp" id="currentTemp">16°C</div>
+                            <div class="window-status" id="windowStatus">Window Closed</div>
+                        </div>
+                        <div class="temp-controls">
+                            <button class="temp-button">10°C</button>
+                            <button class="temp-button active">20°C</button>
+                            <button class="temp-button">40°C</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="centerColumn">
+                    <div id="musicCard" class="card">
+                        <div class="card-header">
+                            <h4>Now Playing</h4>
+                            <span class="more-options">...</span>
+                        </div>
+                        <div class="text-center" style="margin-bottom: 15px;">
+                            <img src="https://via.placeholder.com/60/5b6fef/ffffff?text=♪" alt="Album Art" style="border-radius: 10px; margin-bottom: 10px;">
+                            <p style="margin: 0; font-weight: 600;">The Dark Shape</p>
+                            <p style="margin: 0; font-size: 0.9em; color: var(--sub-text-color);">@empolyeye</p>
+                        </div>
+                        <div class="music-player-controls">
+                            <span>⏮️</span>
+                            <span>▶️</span>
+                            <span>⏭️</span>
+                            <span>🔊</span>
+                        </div>
+                    </div>
+
+                    <div id="controlButtonsGrid">
+                        <div class="grid-btn" id="doorStatusBtn">
+                            <span class="icon">🚪</span>
+                            Door Status
+                        </div>
+                        <div class="grid-btn" id="passengerListBtn">
+                            <span class="icon">👥</span>
+                            Passenger List
+                        </div>
+                        <div class="grid-btn" id="lightStatusBtn">
+                            <span class="icon">💡</span>
+                            Light Status
+                        </div>
+                        <div class="grid-btn">
+                            <span class="icon">🗺️</span>
+                            Live Map (Placeholder)
+                        </div>
+                        <div class="grid-btn">
+                            <span class="icon">🔦</span>
+                            Flash Light (Placeholder)
+                        </div>
+                        <div class="grid-btn">
+                            <span class="icon">⚡</span>
+                            Charging (Placeholder)
+                        </div>
+                        <div class="grid-btn" id="driverAnnouncementBtn">
+                            <span class="icon">📢</span>
+                            Announcement
+                        </div>
+                        <div class="grid-btn">
+                            <span class="icon">🧭</span>
+                            Direction (Placeholder)
+                        </div>
+                    </div>
+
+                    <div id="emergencyCard" class="card">
+                        <div class="card-header">
+                            <h4 style="color: white;">Emergency</h4>
+                            <span class="more-options" style="color: rgba(255,255,255,0.7);">...</span>
+                        </div>
+                        <p>Use for Emergency case only</p>
+                        <div class="emergency-toggle">
+                            <div class="toggle-circle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rightColumn">
+                    <div id="busStatusCard" class="card">
+                        <div class="card-header">
+                            <h4>Bus Monitoring</h4>
+                            <span class="more-options">...</span>
+                        </div>
+                        <div id="busStatsDisplay">
+                            <div class="stat-item">
+                                <strong id="speedometerValue">0</strong>
+                                <span id="speedometerUnit">km/h</span>
+                                </div>
+                            <div class="stat-item">
+                                <strong>Suhu Mesin</strong>
+                                <span id="engineTemp">-- °C</span>
+                            </div>
+                            <div class="stat-item">
+                                <strong>Suhu Kabin</strong>
+                                <span id="cabinTemp">-- °C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -272,9 +719,9 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Door Status</h2>
-                <div class="status-item"><span>Front Door:</span> <span id="frontDoorStatus">Closed</span></div>
-                <div class="status-item"><span>Middle Door:</span> <span id="middleDoorStatus">Closed</span></div>
-                <div class="status-item"><span>Rear Door:</span> <span id="rearDoorStatus">Closed</span></div>
+                <div class="status-item door-status"><span>Front Door:</span> <span id="frontDoorStatus">Closed</span></div>
+                <div class="status-item door-status"><span>Middle Door:</span> <span id="middleDoorStatus">Closed</span></div>
+                <div class="status-item door-status"><span>Rear Door:</span> <span id="rearDoorStatus">Closed</span></div>
                 <div class="status-item"><span>Emergency Exits:</span> <span id="emergencyExitStatus">All Secure</span></div>
             </div>
         </div>
@@ -294,11 +741,11 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <h2>Light Status</h2>
-                <div class="status-item"><span>Interior Lights:</span> <span id="interiorLights">On</span></div>
-                <div class="status-item"><span>Headlights:</span> <span id="headlights">On</span></div>
-                <div class="status-item"><span>Brake Lights:</span> <span id="brakeLights">Off</span></div>
-                <div class="status-item"><span>Turn Signals:</span> <span id="turnSignals">Off</span></div>
-                <div class="status-item"><span>Emergency Lights:</span> <span id="emergencyLights">Off</span></div>
+                <div class="status-item light-status"><span>Interior Lights:</span> <span id="interiorLights">On</span></div>
+                <div class="status-item light-status"><span>Headlights:</span> <span id="headlights">On</span></div>
+                <div class="status-item light-status"><span>Brake Lights:</span> <span id="brakeLights">Off</span></div>
+                <div class="status-item light-status"><span>Turn Signals:</span> <span id="turnSignals">Off</span></div>
+                <div class="status-item light-status"><span>Emergency Lights:</span> <span id="emergencyLights">Off</span></div>
             </div>
         </div>
 
@@ -318,8 +765,9 @@
             import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
             import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
 
+            // --- Three.js Setup ---
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x2c3e50); // Dark blue-grey for 3D background
+            scene.background = new THREE.Color(0xf0f2f5); // Light background for 3D area
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
             scene.add(ambientLight);
@@ -336,19 +784,21 @@
             const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.3);
             scene.add(hemisphereLight);
 
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Aspect ratio will be updated on resize
             camera.position.x = 0;
             camera.position.y = 0;
             camera.position.z = 10;
 
             const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            // Set initial size to fill the card, onWindowResize will update
+            const busStatusCard = document.getElementById('busStatusCard');
+            renderer.setSize(busStatusCard.clientWidth, busStatusCard.clientHeight);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.setClearColor(0x2c3e50, 1);
+            renderer.setClearColor(0xf0f2f5, 1); // Match card background
             
-            // Append renderer to the mainContent div, not body directly
-            document.getElementById('mainContent').appendChild(renderer.domElement);
+            // Append renderer to the busStatusCard div
+            busStatusCard.appendChild(renderer.domElement);
 
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -358,20 +808,22 @@
             controls.enablePan = false;
 
             const progressBar = document.getElementById('progressBar');
+            let busModel; // Store reference to the loaded bus model
 
             const objLoader = new OBJLoader();
             objLoader.load(
                 'https://ridwan89.github.io/3d-web/model.obj',
                 (object) => {
+                    busModel = object; // Assign to global variable
                     progressBar.style.opacity = '0';
                     setTimeout(() => {
                         progressBar.style.display = 'none';
                     }, 500);
                     
-                    const grayMaterial = new THREE.MeshStandardMaterial({
-                        color: 0x7f8c8d,
-                        roughness: 0.8,
-                        metalness: 0.1,
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0x95a5a6, /* Greyish color similar to car in template */
+                        roughness: 0.7,
+                        metalness: 0.2,
                         side: THREE.DoubleSide,
                         transparent: true,
                         opacity: 0
@@ -379,7 +831,7 @@
 
                     object.traverse(function(child) {
                         if (child.isMesh) {
-                            child.material = grayMaterial;
+                            child.material = material;
                             child.castShadow = true;
                             child.receiveShadow = false;
                             child.geometry.computeVertexNormals();
@@ -395,7 +847,7 @@
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const fov = camera.fov * (Math.PI / 180);
                     let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-                    cameraZ *= 1.2;
+                    cameraZ *= 1.2; // Adjust zoom slightly
                     
                     const targetCameraPosition = new THREE.Vector3(
                         cameraZ * 0.7, 
@@ -493,17 +945,19 @@
             );
 
             function onWindowResize() {
-                // Adjust renderer size to fill the mainContent div
-                const mainContent = document.getElementById('mainContent');
-                camera.aspect = mainContent.clientWidth / mainContent.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(mainContent.clientWidth, mainContent.clientHeight);
-                render();
+                const mainContent = document.getElementById('busStatusCard'); // Reference the card where 3D model is
+                if (mainContent && mainContent.clientWidth > 0 && mainContent.clientHeight > 0) {
+                    camera.aspect = mainContent.clientWidth / mainContent.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(mainContent.clientWidth, mainContent.clientHeight);
+                    render();
+                }
             }
             window.addEventListener('resize', onWindowResize, false);
 
             const stats = new Stats();
-            document.body.appendChild(stats.dom); // Keep stats for overall performance
+            // Append stats to body, not inside a specific div, to avoid layout issues
+            document.body.appendChild(stats.dom); 
 
             function animate() {
                 requestAnimationFrame(animate);
@@ -518,7 +972,7 @@
 
             animate();
             
-            // Modal functionality
+            // --- Modal Functionality ---
             const doorStatusBtn = document.getElementById("doorStatusBtn");
             const passengerListBtn = document.getElementById("passengerListBtn");
             const lightStatusBtn = document.getElementById("lightStatusBtn");
@@ -531,21 +985,10 @@
             
             const closeButtons = document.getElementsByClassName("close");
             
-            doorStatusBtn.onclick = function() {
-                doorStatusModal.style.display = "flex";
-            }
-            
-            passengerListBtn.onclick = function() {
-                passengerListModal.style.display = "flex";
-            }
-            
-            lightStatusBtn.onclick = function() {
-                lightStatusModal.style.display = "flex";
-            }
-
-            driverAnnouncementBtn.onclick = function() {
-                driverAnnouncementModal.style.display = "flex";
-            }
+            doorStatusBtn.onclick = function() { doorStatusModal.style.display = "flex"; }
+            passengerListBtn.onclick = function() { passengerListModal.style.display = "flex"; }
+            lightStatusBtn.onclick = function() { lightStatusModal.style.display = "flex"; }
+            driverAnnouncementBtn.onclick = function() { driverAnnouncementModal.style.display = "flex"; }
             
             for (let i = 0; i < closeButtons.length; i++) {
                 closeButtons[i].onclick = function() {
@@ -554,28 +997,55 @@
             }
             
             window.onclick = function(event) {
-                if (event.target == doorStatusModal) {
-                    doorStatusModal.style.display = "none";
-                }
-                if (event.target == passengerListModal) {
-                    passengerListModal.style.display = "none";
-                }
-                if (event.target == lightStatusModal) {
-                    lightStatusModal.style.display = "none";
-                }
-                if (event.target == driverAnnouncementModal) {
-                    driverAnnouncementModal.style.display = "none";
-                }
+                if (event.target == doorStatusModal) { doorStatusModal.style.display = "none"; }
+                if (event.target == passengerListModal) { passengerListModal.style.display = "none"; }
+                if (event.target == lightStatusModal) { lightStatusModal.style.display = "none"; }
+                if (event.target == driverAnnouncementModal) { driverAnnouncementModal.style.display = "none"; }
             }
 
-            // Function to simulate real-time data and update dashboard
+            // --- Dashboard Data Simulation and Geolocation ---
+            // Elements for live updates
+            const busSpeedElement = document.getElementById("speedometerValue"); // Using speedometer value for speed
+            const busLocationDetailedElement = document.getElementById("busLocationDetailed");
+            const busDistanceElement = document.getElementById("busDistance");
+            const busTimeElement = document.getElementById("busTime");
+            const engineTempElement = document.getElementById("engineTemp");
+            const cabinTempElement = document.getElementById("cabinTemp");
+            const climateStatusElement = document.getElementById("climateStatus");
+            const currentTempElement = document.getElementById("currentTemp");
+            const windowStatusElement = document.getElementById("windowStatus");
+            const announcementTextElement = document.getElementById("announcementText");
+
+            const frontDoorStatusElement = document.getElementById("frontDoorStatus");
+            const middleDoorStatusElement = document.getElementById("middleDoorStatus");
+            const rearDoorStatusElement = document.getElementById("rearDoorStatus");
+            const emergencyExitStatusElement = document.getElementById("emergencyExitStatus");
+
+            const interiorLightsElement = document.getElementById("interiorLights");
+            const headlightsElement = document.getElementById("headlights");
+            const brakeLightsElement = document.getElementById("brakeLights");
+            const turnSignalsElement = document.getElementById("turnSignals");
+            const emergencyLightsElement = document.getElementById("emergencyLights");
+
+            const totalPassengersElement = document.getElementById("totalPassengers");
+            const seatedPassengersElement = document.getElementById("seatedPassengers");
+            const standingPassengersElement = document.getElementById("standingPassengers");
+            const specialNeedsPassengersElement = document.getElementById("specialNeedsPassengers");
+
+            // Emergency Toggle
+            const emergencyToggle = document.querySelector('.emergency-toggle');
+            emergencyToggle.addEventListener('click', () => {
+                emergencyToggle.classList.toggle('active');
+            });
+            
+
             function updateBusData() {
                 // Simulate data
-                const speed = Math.floor(Math.random() * 80) + 10;
-                const latitude = -6.917464 + (Math.random() - 0.5) * 0.05;
+                const speed = Math.floor(Math.random() * 80) + 10; // 10-90 km/jam
+                const latitude = -6.917464 + (Math.random() - 0.5) * 0.05; // Bandung area
                 const longitude = 107.619123 + (Math.random() - 0.5) * 0.05;
-                const engineTemp = Math.floor(Math.random() * (100 - 70 + 1)) + 70;
-                const cabinTemp = Math.floor(Math.random() * (30 - 20 + 1)) + 20;
+                const engineTemp = Math.floor(Math.random() * (100 - 70 + 1)) + 70; // 70-100°C
+                const cabinTemp = Math.floor(Math.random() * (30 - 20 + 1)) + 20; // 20-30°C
                 const announcements = [
                     "Selamat datang para penumpang. Bus akan segera berangkat. Mohon siapkan karcis atau kartu pembayaran Anda. Terima kasih.",
                     "Perhatian, halte selanjutnya adalah Terminal Leuwi Panjang. Bagi penumpang yang akan turun, harap bersiap.",
@@ -585,42 +1055,86 @@
                     "Perjalanan akan dilanjutkan setelah istirahat singkat di rest area."
                 ];
                 const randomAnnouncement = announcements[Math.floor(Math.random() * announcements.length)];
+                const randomDistance = (Math.random() * 10).toFixed(1); // 0-10 km
+                const randomTime = Math.floor(Math.random() * 30) + 5; // 5-35 minutes
+                const climateOptions = ["Cloudless", "Rainy", "Sunny", "Partly Cloudy"];
+                const randomClimate = climateOptions[Math.floor(Math.random() * climateOptions.length)];
+                const currentClimateTemp = Math.floor(Math.random() * (35 - 15 + 1)) + 15; // 15-35°C
+                const windowStatuses = ["Window Open", "Window Closed"];
+                const randomWindowStatus = windowStatuses[Math.floor(Math.random() * windowStatuses.length)];
 
 
-                // Update dashboard info in header
-                document.getElementById("busSpeed").textContent = `${speed} km/jam`;
-                document.getElementById("engineTemp").textContent = `${engineTemp} °C`;
-                document.getElementById("cabinTemp").textContent = `${cabinTemp} °C`;
-                document.getElementById("announcementText").textContent = randomAnnouncement;
+                // Update dashboard info
+                busSpeedElement.textContent = speed;
+                busDistanceElement.textContent = `${randomDistance} Km`;
+                busTimeElement.textContent = `${randomTime} min`;
+                engineTempElement.textContent = `${engineTemp} °C`;
+                cabinTempElement.textContent = `${cabinTemp} °C`;
+                climateStatusElement.textContent = `${randomClimate}: ${currentClimateTemp}°C`;
+                currentTempElement.textContent = `${currentClimateTemp}°C`;
+                windowStatusElement.textContent = randomWindowStatus;
+                announcementTextElement.textContent = randomAnnouncement;
 
                 // Update location and translate to geolocation name
-                document.getElementById("busLocation").textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)})`; // Show coordinates first
+                busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
                 getGeolocationName(latitude, longitude).then(locationName => {
-                    document.getElementById("busLocation").textContent = `${locationName}`; // Then update with name
+                    busLocationDetailedElement.textContent = `${locationName}`;
                 }).catch(error => {
                     console.error("Error getting geolocation name:", error);
-                    document.getElementById("busLocation").textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
+                    busLocationDetailedElement.textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
                 });
 
                 // Simulate door status changes
                 const doorStatuses = ["Open", "Closed"];
-                document.getElementById("frontDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
-                document.getElementById("middleDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
-                document.getElementById("rearDoorStatus").textContent = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+                const frontDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+                const middleDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+                const rearDoorStatus = doorStatuses[Math.floor(Math.random() * doorStatuses.length)];
+
+                frontDoorStatusElement.textContent = frontDoorStatus;
+                frontDoorStatusElement.className = frontDoorStatus.toLowerCase(); // Add class for coloring
+                middleDoorStatusElement.textContent = middleDoorStatus;
+                middleDoorStatusElement.className = middleDoorStatus.toLowerCase();
+                rearDoorStatusElement.textContent = rearDoorStatus;
+                rearDoorStatusElement.className = rearDoorStatus.toLowerCase();
+                emergencyExitStatusElement.textContent = "All Secure"; // Usually fixed
 
                 // Simulate light status changes
                 const lightStates = ["On", "Off"];
-                document.getElementById("interiorLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
-                document.getElementById("headlights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
-                document.getElementById("brakeLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
-                document.getElementById("turnSignals").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
-                document.getElementById("emergencyLights").textContent = lightStates[Math.floor(Math.random() * lightStates.length)];
+                const interiorLights = lightStates[Math.floor(Math.random() * lightStates.length)];
+                const headlights = lightStates[Math.floor(Math.random() * lightStates.length)];
+                const brakeLights = lightStates[Math.floor(Math.random() * lightStates.length)];
+                const turnSignals = lightStates[Math.floor(Math.random() * lightStates.length)];
+                const emergencyLights = lightStates[Math.floor(Math.random() * lightStates.length)];
+
+                interiorLightsElement.textContent = interiorLights;
+                interiorLightsElement.className = interiorLights.toLowerCase();
+                headlightsElement.textContent = headlights;
+                headlightsElement.className = headlights.toLowerCase();
+                brakeLightsElement.textContent = brakeLights;
+                brakeLightsElement.className = brakeLights.toLowerCase();
+                turnSignalsElement.textContent = turnSignals;
+                turnSignalsElement.className = turnSignals.toLowerCase();
+                emergencyLightsElement.textContent = emergencyLights;
+                emergencyLightsElement.className = emergencyLights.toLowerCase();
 
                  // Simulate passenger changes
-                document.getElementById("totalPassengers").textContent = Math.floor(Math.random() * 50) + 1;
-                document.getElementById("seatedPassengers").textContent = Math.floor(Math.random() * 40) + 1;
-                document.getElementById("standingPassengers").textContent = Math.floor(Math.random() * 10) + 1;
-                document.getElementById("specialNeedsPassengers").textContent = Math.floor(Math.random() * 3);
+                totalPassengersElement.textContent = Math.floor(Math.random() * 50) + 1;
+                seatedPassengersElement.textContent = Math.floor(Math.random() * 40) + 1;
+                standingPassengersElement.textContent = Math.floor(Math.random() * 10) + 1;
+                specialNeedsPassengersElement.textContent = Math.floor(Math.random() * 3);
+
+                // Update speedometer needle rotation (if visual speedometer is enabled in HTML/CSS)
+                // const speedometerNeedle = document.getElementById('speedometerNeedle');
+                // if (speedometerNeedle) {
+                //     // Map speed (0-90) to rotation (0-180 degrees)
+                //     const rotation = (speed / 90) * 180;
+                //     speedometerNeedle.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+                // }
+
+                // Rotate bus model if available
+                if (busModel) {
+                    busModel.rotation.y += 0.005; // Subtle continuous rotation
+                }
             }
 
             // Function to translate coordinates to geolocation name (using OpenCage Geocoding API)
@@ -634,13 +1148,14 @@
                     const response = await fetch(url);
                     const data = await response.json();
                     if (data.results && data.results.length > 0) {
-                        // Prioritize relevant location names, e.g., city, road, etc.
                         const components = data.results[0].components;
+                        // Prioritize common location types
                         if (components.city) return components.city;
                         if (components.town) return components.town;
                         if (components.village) return components.village;
                         if (components.road) return components.road;
-                        if (data.results[0].formatted) return data.results[0].formatted;
+                        if (components.suburb) return components.suburb;
+                        if (data.results[0].formatted) return data.results[0].formatted.split(',')[0]; // Just the first part of formatted address
                         return "Lokasi tidak diketahui";
                     } else {
                         return "Lokasi tidak diketahui";
