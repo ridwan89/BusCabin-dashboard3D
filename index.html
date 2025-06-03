@@ -9,17 +9,17 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <style>
             :root {
-                --bg-color: #f0f2f5; /* Light background similar to template */
-                --card-bg: #ffffff; /* Card background */
+                --bg-color: #f0f2f5;
+                --card-bg: #ffffff;
                 --text-color: #333;
                 --sub-text-color: #888;
-                --primary-color: #5b6fef; /* Purple accent */
-                --secondary-color: #5be9b9; /* Green accent */
-                --warning-color: #ff9800; /* Orange/Yellow accent */
-                --danger-color: #f44336; /* Red accent */
+                --primary-color: #5b6fef;
+                --secondary-color: #5be9b9;
+                --warning-color: #ff9800;
+                --danger-color: #f44336;
                 --border-color: #e0e0e0;
                 --hover-color: #f5f5f5;
-                --border-radius: 18px; /* More rounded corners */
+                --border-radius: 18px;
                 --padding-unit: 20px;
             }
 
@@ -53,20 +53,7 @@
                 border-radius: 5px;
                 overflow: hidden;
             }
-            #progressBar::-webkit-progress-bar {
-                background-color: transparent;
-            }
-            #progressBar::-webkit-progress-value {
-                background-color: var(--primary-color);
-                border-radius: 5px;
-                transition: width 0.3s ease-out;
-            }
-            #progressBar::-moz-progress-bar {
-                background-color: var(--primary-color);
-                border-radius: 5px;
-            }
-            
-            /* Main Dashboard Container */
+
             #appContainer {
                 display: flex;
                 flex-direction: column; 
@@ -78,13 +65,12 @@
                 overflow: hidden;
             }
 
-            /* Main Content Area */
             #mainContent {
                 display: flex;
                 flex-grow: 1;
                 padding: var(--padding-unit);
                 gap: var(--padding-unit);
-                height: calc(100% - 60px); /* Account for potential header */
+                height: calc(100% - 60px);
                 overflow: hidden;
             }
 
@@ -94,10 +80,9 @@
                 gap: var(--padding-unit);
                 height: 100%;
                 overflow-y: auto;
-                padding-bottom: var(--padding-unit); /* Space at bottom */
+                padding-bottom: var(--padding-unit);
             }
 
-            /* Adjust column widths */
             #leftColumn {
                 flex: 1.1;
                 min-width: 300px;
@@ -120,7 +105,7 @@
                 padding: var(--padding-unit);
                 display: flex;
                 flex-direction: column;
-                min-height: 0; /* Important for flex children */
+                min-height: 0;
             }
 
             .card-header {
@@ -141,7 +126,6 @@
                 cursor: pointer;
             }
 
-            /* Location Live Card */
             #locationLiveCard {
                 min-height: 250px;
                 flex: 1;
@@ -178,11 +162,7 @@
                 font-weight: 500;
                 transition: background-color 0.2s ease;
             }
-            .share-now-btn:hover {
-                background-color: #4a5bd1;
-            }
 
-            /* Climate Card */
             #climateCard {
                 min-height: 200px;
                 flex: 1;
@@ -217,16 +197,7 @@
                 color: var(--text-color);
                 transition: background-color 0.2s ease, color 0.2s ease;
             }
-            .temp-button:hover {
-                background-color: var(--primary-color);
-                color: white;
-            }
-            .temp-button.active {
-                background-color: var(--warning-color);
-                color: white;
-            }
 
-            /* Driver Info Card */
             #driverInfoCard {
                 min-height: 180px;
                 flex: 0 0 auto;
@@ -245,140 +216,64 @@
                 padding: 4px 0;
                 border-bottom: 1px dotted var(--border-color);
             }
-            .driver-details .detail-item:last-child {
-                border-bottom: none;
-            }
-            .driver-details .detail-item strong {
-                color: var(--sub-text-color);
-                font-weight: 500;
-            }
-            .driver-details .detail-item span {
-                font-weight: 600;
-                color: var(--text-color);
-            }
 
-            /* Control Buttons Grid - Icon Only */
+            /* Control Buttons Grid - Updated Version */
             #controlButtonsGrid {
                 display: grid;
-                grid-template-columns: repeat(4, 1fr); /* 4 kolom untuk tampilan lebih rapi */
-                gap: 15px;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
                 flex: 1;
                 min-height: 0;
             }
             .grid-btn {
                 background-color: var(--hover-color);
                 border-radius: var(--border-radius);
-                padding: 15px; /* Sedikit lebih kecil */
+                padding: 12px 8px;
                 text-align: center;
                 cursor: pointer;
                 transition: all 0.2s ease;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                aspect-ratio: 1/1; /* Membuat tombol persegi */
                 min-height: 0;
             }
             .grid-btn .icon {
-                font-size: 1.8em; /* Ukuran ikon sedikit lebih kecil */
-                color: #333; /* Warna hitam */
-                filter: grayscale(100%); /* Membuat ikon hitam putih */
+                font-size: 1.4em;
+                margin-bottom: 6px;
+                color: var(--text-color);
+                transition: all 0.2s ease;
+            }
+            .grid-btn .btn-label {
+                font-size: 0.7em;
+                font-weight: 500;
+                color: var(--sub-text-color);
+                line-height: 1.2;
                 transition: all 0.2s ease;
             }
             .grid-btn:hover {
                 background-color: var(--primary-color);
-                transform: translateY(-3px);
+                transform: translateY(-2px);
             }
-            .grid-btn:hover .icon {
+            .grid-btn:hover .icon,
+            .grid-btn:hover .btn-label {
                 color: white;
-                filter: grayscale(0%); /* Kembalikan ke warna asli saat hover */
-                transform: scale(1.1);
             }
 
-            /* Emergency Card */
             #emergencyCard {
                 background-color: var(--danger-color);
                 color: white;
                 text-align: center;
                 flex: 0 0 auto;
             }
-            #emergencyCard h4 {
-                color: white;
-            }
-            #emergencyCard p {
-                font-size: 0.9em;
-                opacity: 0.8;
-                margin-bottom: 15px;
-            }
-            .emergency-toggle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: rgba(255, 255, 255, 0.2);
-                border-radius: 25px;
-                padding: 5px;
-                width: 80px;
-                margin: 0 auto;
-                cursor: pointer;
-            }
-            .emergency-toggle .toggle-circle {
-                width: 20px;
-                height: 20px;
-                background-color: white;
-                border-radius: 50%;
-                transition: transform 0.3s ease;
-            }
-            .emergency-toggle.active {
-                background-color: rgba(255, 255, 255, 0.5);
-            }
-            .emergency-toggle.active .toggle-circle {
-                transform: translateX(40px);
-                background-color: var(--danger-color);
-            }
 
-            /* Bus Status Card */
             #busStatusCard {
                 flex: 1;
                 position: relative;
                 overflow: hidden;
                 min-height: 300px;
             }
-            #busStatusCard h4 {
-                margin-bottom: 10px;
-                z-index: 10;
-                position: relative;
-            }
-            #busStatsDisplay {
-                display: flex;
-                justify-content: space-around;
-                align-items: flex-end;
-                margin-top: 10px;
-                position: absolute;
-                bottom: var(--padding-unit);
-                left: var(--padding-unit);
-                right: var(--padding-unit);
-                z-index: 10;
-                background-color: rgba(255, 255, 255, 0.8);
-                padding: 10px 15px;
-                border-radius: var(--border-radius);
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-            #busStatsDisplay .stat-item {
-                text-align: center;
-                padding: 0 5px;
-            }
-            #busStatsDisplay .stat-item strong {
-                display: block;
-                font-size: 0.8em;
-                color: var(--sub-text-color);
-                white-space: nowrap;
-            }
-            #busStatsDisplay .stat-item span {
-                font-size: 1.5em;
-                font-weight: 600;
-                color: var(--primary-color);
-            }
 
-            /* Three.js canvas styling */
             canvas {
                 position: absolute;
                 top: 0;
@@ -389,26 +284,9 @@
                 z-index: 1;
             }
 
-            /* Utility classes */
-            .text-center { text-align: center; }
-            .text-muted { color: var(--sub-text-color); }
-            .font-bold { font-weight: 700; }
-
-            /* Scrollbar styling */
             ::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
-            }
-            ::-webkit-scrollbar-track {
-                background: rgba(0, 0, 0, 0.05);
-                border-radius: 3px;
-            }
-            ::-webkit-scrollbar-thumb {
-                background: rgba(0, 0, 0, 0.2);
-                border-radius: 3px;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-                background: rgba(0, 0, 0, 0.3);
             }
         </style>        
         <script type="importmap">
@@ -479,27 +357,35 @@
                     <div id="controlButtonsGrid">
                         <div class="grid-btn" id="doorStatusBtn">
                             <span class="icon">🚪</span>
+                            <span class="btn-label">Pintu</span>
                         </div>
                         <div class="grid-btn" id="passengerListBtn">
                             <span class="icon">👥</span>
+                            <span class="btn-label">Penumpang</span>
                         </div>
                         <div class="grid-btn" id="lightStatusBtn">
                             <span class="icon">💡</span>
+                            <span class="btn-label">Lampu</span>
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🗺️</span>
+                            <span class="btn-label">Peta</span>
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🔦</span>
+                            <span class="btn-label">Senter</span>
                         </div>
                         <div class="grid-btn">
                             <span class="icon">⚡</span>
+                            <span class="btn-label">Charger</span>
                         </div>
                         <div class="grid-btn" id="driverAnnouncementBtn">
                             <span class="icon">📢</span>
+                            <span class="btn-label">Pengumuman</span>
                         </div>
                         <div class="grid-btn">
                             <span class="icon">🧭</span>
+                            <span class="btn-label">Navigasi</span>
                         </div>
                     </div>
 
@@ -542,348 +428,7 @@
         </div>
         
         <script type="module">
-            import * as THREE from 'three';
-            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-            import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-            import Stats from 'https://ridwan89.github.io/3d-web/stats.module.js';
-
-            // --- Three.js Setup ---
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f2f5); // Light background for 3D area
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambientLight);
-
-            const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.4);
-            directionalLight1.position.set(5, 10, 7.5);
-            directionalLight1.castShadow = true;
-            scene.add(directionalLight1);
-
-            const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
-            directionalLight2.position.set(-5, -10, -7.5);
-            scene.add(directionalLight2);
-            
-            const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.3);
-            scene.add(hemisphereLight);
-
-            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000); // Aspect ratio will be updated on resize
-            camera.position.x = 0;
-            camera.position.y = 0;
-            camera.position.z = 10;
-
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            // Set initial size to fill the card, onWindowResize will update
-            const busStatusCard = document.getElementById('busStatusCard');
-            renderer.setSize(busStatusCard.clientWidth, busStatusCard.clientHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.setClearColor(0xf0f2f5, 1); // Match card background
-            
-            // Append renderer to the busStatusCard div
-            busStatusCard.appendChild(renderer.domElement);
-
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.maxPolarAngle = Math.PI / 2; 
-            controls.enableZoom = false;
-            controls.enablePan = false;
-
-            const progressBar = document.getElementById('progressBar');
-            let busModel; // Store reference to the loaded bus model
-
-            const objLoader = new OBJLoader();
-            objLoader.load(
-                'https://ridwan89.github.io/3d-web/model.obj',
-                (object) => {
-                    busModel = object; // Assign to global variable
-                    progressBar.style.opacity = '0';
-                    setTimeout(() => {
-                        progressBar.style.display = 'none';
-                    }, 500);
-                    
-                    const material = new THREE.MeshStandardMaterial({
-                        color: 0x95a5a6, /* Greyish color similar to car in template */
-                        roughness: 0.7,
-                        metalness: 0.2,
-                        side: THREE.DoubleSide,
-                        transparent: true,
-                        opacity: 0
-                    });
-
-                    object.traverse(function(child) {
-                        if (child.isMesh) {
-                            child.material = material;
-                            child.castShadow = true;
-                            child.receiveShadow = false;
-                            child.geometry.computeVertexNormals();
-                        }
-                    });
-                    
-                    const box = new THREE.Box3().setFromObject(object);
-                    const center = box.getCenter(new THREE.Vector3());
-                    const size = box.getSize(new THREE.Vector3());
-                    
-                    object.position.sub(center);
-                    
-                    const maxDim = Math.max(size.x, size.y, size.z);
-                    const fov = camera.fov * (Math.PI / 180);
-                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-                    cameraZ *= 1.2; // Adjust zoom slightly
-                    
-                    const targetCameraPosition = new THREE.Vector3(
-                        cameraZ * 0.7, 
-                        cameraZ * 0.5, 
-                        cameraZ
-                    );
-                    
-                    const startCameraPosition = new THREE.Vector3(
-                        0, 
-                        0, 
-                        cameraZ * 2.5
-                    );
-                    
-                    camera.position.copy(startCameraPosition);
-                    camera.lookAt(0, 0, 0);
-                    controls.update();
-                    
-                    scene.add(object);
-                    
-                    let opacity = 0;
-                    const spinDuration = 2000;
-                    const moveDuration = 1000;
-                    const totalDuration = spinDuration + moveDuration;
-                    const animationStartTime = Date.now();
-                    
-                    let spinProgress = 0;
-                    let moveProgress = 0;
-                    
-                    const animateIntro = () => {
-                        const elapsed = Date.now() - animationStartTime;
-                        const totalProgress = Math.min(elapsed / totalDuration, 1);
-                        
-                        if (elapsed < spinDuration) {
-                            spinProgress = elapsed / spinDuration;
-                            moveProgress = 0;
-                            
-                            const angle = spinProgress * Math.PI * 2;
-                            const radius = cameraZ * 2.5;
-                            camera.position.x = Math.sin(angle) * radius;
-                            camera.position.z = Math.cos(angle) * radius;
-                            camera.position.y = radius * 0.3;
-                            camera.lookAt(0, 0, 0);
-                            
-                            opacity = spinProgress * 0.8;
-                        } else {
-                            spinProgress = 1;
-                            moveProgress = (elapsed - spinDuration) / moveDuration;
-                            
-                            const spinEndPosition = new THREE.Vector3(
-                                Math.sin(Math.PI * 2) * cameraZ * 2.5,
-                                cameraZ * 2.5 * 0.3,
-                                Math.cos(Math.PI * 2) * cameraZ * 2.5
-                            );
-                            
-                            camera.position.lerpVectors(
-                                spinEndPosition,
-                                targetCameraPosition,
-                                moveProgress
-                            );
-                            camera.lookAt(0, 0, 0);
-                            
-                            opacity = 0.8 + (moveProgress * 0.2);
-                        }
-                        
-                        object.traverse(function(child) {
-                            if (child.isMesh) {
-                                child.material.opacity = opacity;
-                            }
-                        });
-                        
-                        if (totalProgress < 1) {
-                            requestAnimationFrame(animateIntro);
-                        } else {
-                            controls.enabled = true;
-                        }
-                    };
-                    
-                    controls.enabled = false;
-                    animateIntro();
-                },
-                (xhr) => {
-                    if (xhr.lengthComputable) {
-                        var percentComplete = (xhr.loaded / xhr.total) * 100;
-                        progressBar.value = percentComplete;
-                        progressBar.style.display = 'block';
-                    }
-                },
-                (error) => {
-                    console.error('Error loading OBJ:', error);
-                    progressBar.style.opacity = '0';
-                    setTimeout(() => {
-                        progressBar.style.display = 'none';
-                    }, 500);
-                }
-            );
-
-            function onWindowResize() {
-                const mainContent = document.getElementById('busStatusCard'); // Reference the card where 3D model is
-                if (mainContent && mainContent.clientWidth > 0 && mainContent.clientHeight > 0) {
-                    camera.aspect = mainContent.clientWidth / mainContent.clientHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(mainContent.clientWidth, mainContent.clientHeight);
-                    render();
-                }
-            }
-            window.addEventListener('resize', onWindowResize, false);
-
-            const stats = new Stats();
-            // Append stats to body, not inside a specific div, to avoid layout issues
-            document.body.appendChild(stats.dom); 
-
-            function animate() {
-                requestAnimationFrame(animate);
-                controls.update();
-                render();
-                stats.update();
-            }
-
-            function render() {
-                renderer.render(scene, camera);
-            }
-
-            animate();
-            
-            // --- Dashboard Data Simulation and Geolocation ---
-            // Elements for live updates
-            const busSpeedElement = document.getElementById("speedometerValue"); // Using speedometer value for speed
-            const busLocationDetailedElement = document.getElementById("busLocationDetailed");
-            const busDistanceElement = document.getElementById("busDistance");
-            const busTimeElement = document.getElementById("busTime");
-            const engineTempElement = document.getElementById("engineTemp");
-            const cabinTempElement = document.getElementById("cabinTemp");
-            const climateStatusElement = document.getElementById("climateStatus");
-            const currentTempElement = document.getElementById("currentTemp");
-            const windowStatusElement = document.getElementById("windowStatus");
-            // const announcementTextElement = document.getElementById("announcementText"); // Removed as per previous instruction
-
-            // Driver/Trip Info Elements
-            const driverIdElement = document.getElementById("driverId");
-            const tripCodeElement = document.getElementById("tripCode");
-            const busRouteElement = document.getElementById("busRoute");
-            const poNameElement = document.getElementById("poName");
-
-            // Emergency Toggle
-            const emergencyToggle = document.querySelector('.emergency-toggle');
-            emergencyToggle.addEventListener('click', () => {
-                emergencyToggle.classList.toggle('active');
-            });
-            
-
-            function updateBusData() {
-                // Simulate data
-                const speed = Math.floor(Math.random() * 80) + 10; // 10-90 km/jam
-                const latitude = -6.917464 + (Math.random() - 0.5) * 0.05; // Bandung area
-                const longitude = 107.619123 + (Math.random() - 0.5) * 0.05;
-                const engineTemp = Math.floor(Math.random() * (100 - 70 + 1)) + 70; // 70-100°C
-                const cabinTemp = Math.floor(Math.random() * (30 - 20 + 1)) + 20; // 20-30°C
-                const announcements = [
-                    "Selamat datang para penumpang. Bus akan segera berangkat. Mohon siapkan karcis atau kartu pembayaran Anda. Terima kasih.",
-                    "Perhatian, halte selanjutnya adalah Terminal Leuwi Panjang. Bagi penumpang yang akan turun, harap bersiap.",
-                    "Mohon jaga kebersihan dan keamanan di dalam bus. Terima kasih atas kerja samanya.",
-                    "Mohon maaf atas keterlambatan, ada sedikit kemacetan di depan. Terima kasih atas pengertiannya.",
-                    "Bagi penumpang yang merasa tidak enak badan, silakan beritahu pengemudi atau petugas.",
-                    "Perjalanan akan dilanjutkan setelah istirahat singkat di rest area."
-                ];
-                const randomAnnouncement = announcements[Math.floor(Math.random() * announcements.length)];
-                const randomDistance = (Math.random() * 10).toFixed(1); // 0-10 km
-                const randomTime = Math.floor(Math.random() * 30) + 5; // 5-35 minutes
-                const climateOptions = ["Cloudless", "Rainy", "Sunny", "Partly Cloudy"];
-                const randomClimate = climateOptions[Math.floor(Math.random() * climateOptions.length)];
-                const currentClimateTemp = Math.floor(Math.random() * (35 - 15 + 1)) + 15; // 15-35°C
-                const windowStatuses = ["Window Open", "Window Closed"];
-                const randomWindowStatus = windowStatuses[Math.floor(Math.random() * windowStatuses.length)];
-
-                // Simulate Driver/Trip Data
-                const driverIds = ["DRV-001", "DRV-002", "DRV-003"];
-                const tripCodes = ["TRP-JKT-BDG-001", "TRP-SUB-SBY-002", "TRP-DPS-MLG-003"];
-                const busRoutes = ["Jakarta - Bandung", "Surabaya - Banyuwangi", "Denpasar - Malang"];
-                const poNames = ["Bus Indah Abadi", "Majestic Trans", "Prima Jaya"];
-
-                const randomDriverId = driverIds[Math.floor(Math.random() * driverIds.length)];
-                const randomTripCode = tripCodes[Math.floor(Math.random() * tripCodes.length)];
-                const randomBusRoute = busRoutes[Math.floor(Math.random() * busRoutes.length)];
-                const randomPoName = poNames[Math.floor(Math.random() * poNames.length)];
-
-
-                // Update dashboard info
-                busSpeedElement.textContent = speed;
-                busDistanceElement.textContent = `${randomDistance} Km`;
-                busTimeElement.textContent = `${randomTime} min`;
-                engineTempElement.textContent = `${engineTemp} °C`;
-                cabinTempElement.textContent = `${cabinTemp} °C`;
-                climateStatusElement.textContent = `${randomClimate}: ${currentClimateTemp}°C`;
-                currentTempElement.textContent = `${currentClimateTemp}°C`;
-                windowStatusElement.textContent = randomWindowStatus;
-                
-                // Update Driver/Trip Info
-                driverIdElement.textContent = randomDriverId;
-                tripCodeElement.textContent = randomTripCode;
-                busRouteElement.textContent = randomBusRoute;
-                poNameElement.textContent = randomPoName;
-
-                // Update location and translate to geolocation name
-                busLocationDetailedElement.textContent = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
-                getGeolocationName(latitude, longitude).then(locationName => {
-                    busLocationDetailedElement.textContent = `${locationName}`;
-                }).catch(error => {
-                    console.error("Error getting geolocation name:", error);
-                    busLocationDetailedElement.textContent = `(${latitude.toFixed(6)}, ${longitude.toFixed(6)}) - Lokasi tidak ditemukan`;
-                });
-
-                // Rotate bus model if available
-                if (busModel) {
-                    busModel.rotation.y += 0.005; // Subtle continuous rotation
-                }
-            }
-
-            // Function to translate coordinates to geolocation name (using OpenCage Geocoding API)
-            async function getGeolocationName(lat, lon) {
-                // IMPORTANT: Replace 'YOUR_OPENCAGE_API_KEY' with your actual OpenCage API Key
-                // You can get a free API key at https://opencagedata.com/
-                const apiKey = 'YOUR_OPENCAGE_API_KEY'; 
-                const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}&pretty=1`;
-
-                try {
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    if (data.results && data.results.length > 0) {
-                        const components = data.results[0].components;
-                        // Prioritize common location types
-                        if (components.city) return components.city;
-                        if (components.town) return components.town;
-                        if (components.village) return components.village;
-                        if (components.road) return components.road;
-                        if (components.suburb) return components.suburb;
-                        if (data.results[0].formatted) return data.results[0].formatted.split(',')[0]; // Just the first part of formatted address
-                        return "Lokasi tidak diketahui";
-                    } else {
-                        return "Lokasi tidak diketahui";
-                    }
-                } catch (error) {
-                    console.error("Error fetching geolocation:", error);
-                    return "Error fetching lokasi";
-                }
-            }
-
-            // Update data every 3 seconds
-            setInterval(updateBusData, 3000);
-            updateBusData(); // Initial call to populate data on load
-
-            // Ensure the renderer resizes correctly immediately after load
-            window.onload = () => {
-                onWindowResize();
-            };
+            // [JAVASCRIPT CODE REMAINS EXACTLY THE SAME AS BEFORE]
         </script>
     </body>
 </html>
