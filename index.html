@@ -5,26 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="Ridwan Syarif Setiawan" />
     <title>Bus Intelligence Core</title>
-    <meta name="description" content="Three.js">
+    <meta name="description" content="Advanced Bus Monitoring Dashboard">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f0f2f5;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #333;
-            --sub-text-color: #888;
-            --primary-color: #5b6fef;
-            --secondary-color: #5be9b9;
-            --warning-color: #ff9800;
-            --danger-color: #f44336;
-            --border-color: #e0e0e0;
-            --hover-color: #f5f5f5;
-            --border-radius: 18px;
-            --padding-unit: 20px;
-            --gauge-primary: #95a5a6;
-            --gauge-secondary: #7d8b8c;
-            --gauge-accent: #5b6fef;
+            --text-color: #1e293b;
+            --sub-text-color: #64748b;
+            --primary-color: #4f46e5;
+            --primary-light: #6366f1;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --border-color: #e2e8f0;
+            --hover-color: #f1f5f9;
+            --border-radius: 12px;
+            --padding-unit: 16px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --gauge-primary: #cbd5e1;
+            --gauge-secondary: #94a3b8;
+            --gauge-accent: #4f46e5;
         }
 
         * {
@@ -45,17 +51,27 @@
         }
 
         #progressBar {
-            width: 400px;
-            height: 10px;
+            width: 300px;
+            height: 6px;
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
             z-index: 1000;
             transition: opacity 0.5s ease-out;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
             overflow: hidden;
+        }
+
+        #progressBar::-webkit-progress-bar {
+            background-color: transparent;
+        }
+
+        #progressBar::-webkit-progress-value {
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            transition: width 0.3s ease;
         }
 
         #appContainer {
@@ -65,8 +81,78 @@
             height: 100%;
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
+        }
+
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .logo-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .logo-subtext {
+            font-size: 0.7rem;
+            color: var(--sub-text-color);
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: var(--sub-text-color);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .header-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
         }
 
         #mainContent {
@@ -74,7 +160,7 @@
             flex-grow: 1;
             padding: var(--padding-unit);
             gap: var(--padding-unit);
-            height: calc(100% - 60px);
+            height: calc(100% - 68px);
             overflow: hidden;
         }
 
@@ -105,29 +191,51 @@
         .card {
             background-color: var(--card-bg);
             border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow);
             padding: var(--padding-unit);
             display: flex;
             flex-direction: column;
             min-height: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
+        
         .card-header h4 {
             margin: 0;
-            font-size: 1.2em;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        
+        .card-header .card-icon {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
         .card-header .more-options {
-            font-size: 1.5em;
+            font-size: 1rem;
             color: var(--sub-text-color);
             cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .card-header .more-options:hover {
+            color: var(--primary-color);
         }
 
         #locationLiveCard {
@@ -137,37 +245,68 @@
         
         #mapPlaceholder {
             flex-grow: 1;
-            border-radius: 10px;
+            border-radius: 8px;
             min-height: 120px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             overflow: hidden;
+            position: relative;
         }
         
         #map {
             width: 100%;
             height: 100%;
-            filter: grayscale(100%) contrast(110%);
+            filter: grayscale(20%) contrast(110%) hue-rotate(180deg) brightness(0.95);
         }
 
         .location-details {
-            font-size: 0.9em;
+            font-size: 0.85rem;
             color: var(--sub-text-color);
+            line-height: 1.5;
         }
+        
+        .location-details strong {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
         .location-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 12px;
         }
+        
         .share-now-btn {
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 10px;
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            transition: background-color 0.2s ease;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .share-now-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2);
+        }
+        
+        .location-distance {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            color: var(--sub-text-color);
+        }
+        
+        .location-distance .icon {
+            color: var(--primary-color);
         }
 
         /* Automotive Infographic Styles */
@@ -200,7 +339,7 @@
             border-top-left-radius: 90px 90px;
             border-top-right-radius: 90px 90px;
             overflow: hidden;
-            background-color: #f0f2f5;
+            background-color: var(--bg-color);
         }
         
         .gauge-fill {
@@ -232,28 +371,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2em;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-color);
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05) inset;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05) inset;
             border: 1px solid rgba(0,0,0,0.05);
         }
         
         .gauge-title {
-            font-size: 0.8em;
+            font-size: 0.75rem;
             color: var(--sub-text-color);
             margin-top: 5px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .gauge-value {
-            font-size: 1em;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--primary-color);
         }
         
         .gauge-unit {
-            font-size: 0.6em;
+            font-size: 0.6rem;
             color: var(--sub-text-color);
             margin-left: 2px;
         }
@@ -261,55 +402,72 @@
         .status-indicators {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             margin-top: 10px;
         }
         
         .status-item {
             display: flex;
             align-items: center;
-            font-size: 0.85em;
-            padding: 5px 10px;
+            font-size: 0.75rem;
+            padding: 4px 10px;
             background-color: var(--hover-color);
-            border-radius: 12px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .status-item:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
         
         .status-icon {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             margin-right: 6px;
         }
         
         .status-normal {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
         }
         
         .status-warning {
-            background-color: #FFC107;
+            background-color: var(--warning-color);
         }
         
         .status-danger {
-            background-color: #F44336;
+            background-color: var(--danger-color);
         }
 
         #driverInfoCard {
             min-height: 180px;
             flex: 0 0 auto;
         }
+        
         .driver-details {
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-bottom: 15px;
         }
+        
         .driver-details .detail-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.95em;
-            padding: 4px 0;
-            border-bottom: 1px dotted var(--border-color);
+            font-size: 0.85rem;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .driver-details .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .driver-details strong {
+            color: var(--text-color);
+            font-weight: 500;
         }
 
         /* Control Buttons Grid */
@@ -320,6 +478,7 @@
             flex: 1;
             min-height: 0;
         }
+        
         .grid-btn {
             background-color: var(--hover-color);
             border-radius: var(--border-radius);
@@ -332,34 +491,88 @@
             align-items: center;
             justify-content: center;
             min-height: 0;
+            border: 1px solid var(--border-color);
         }
+        
         .grid-btn .icon {
-            font-size: 1.4em;
-            margin-bottom: 6px;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
             color: var(--text-color);
             transition: all 0.2s ease;
         }
+        
         .grid-btn .btn-label {
-            font-size: 0.7em;
+            font-size: 0.75rem;
             font-weight: 500;
             color: var(--sub-text-color);
             line-height: 1.2;
             transition: all 0.2s ease;
         }
+        
         .grid-btn:hover {
             background-color: var(--primary-color);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+            border-color: var(--primary-light);
         }
+        
         .grid-btn:hover .icon,
         .grid-btn:hover .btn-label {
             color: white;
         }
 
         #emergencyCard {
-            background-color: var(--danger-color);
+            background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
             color: white;
             text-align: center;
             flex: 0 0 auto;
+            border: none;
+        }
+        
+        #emergencyCard .card-header h4,
+        #emergencyCard .more-options {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        #emergencyCard p {
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+        
+        .emergency-toggle {
+            width: 60px;
+            height: 30px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .emergency-toggle:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .emergency-toggle .toggle-circle {
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .emergency-toggle.active {
+            background-color: rgba(255,255,255,0.4);
+        }
+        
+        .emergency-toggle.active .toggle-circle {
+            transform: translateX(30px);
         }
 
         #busStatusCard {
@@ -367,6 +580,61 @@
             position: relative;
             overflow: hidden;
             min-height: 300px;
+            padding: 0;
+        }
+        
+        #busStatusCard .card-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 16px;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 100%);
+        }
+        
+        #busStatusCard .card-header h4 {
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        #busStatusCard .card-header .more-options {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        #busStatsDisplay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-item {
+            background-color: rgba(255,255,255,0.9);
+            padding: 10px 12px;
+            border-radius: 8px;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-item strong {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--sub-text-color);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .stat-item span {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-color);
         }
 
         canvas {
@@ -379,9 +647,24 @@
             z-index: 1;
         }
 
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--sub-text-color);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
         }
     </style>        
     <script type="importmap">
@@ -397,12 +680,29 @@
     <progress value="0" max="100" id="progressBar"></progress>
     
     <div id="appContainer">
+        <div id="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <div>
+                    <div class="logo-text">Bus Intelligence Core</div>
+                    <div class="logo-subtext">Real-time Monitoring Dashboard</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn"><i class="fas fa-bell"></i></button>
+                <button class="header-btn"><i class="fas fa-cog"></i></button>
+                <div class="user-avatar">RS</div>
+            </div>
+        </div>
+        
         <div id="mainContent">
             <div id="leftColumn">
                 <div id="locationLiveCard" class="card">
                     <div class="card-header">
-                        <h4>Location Live</h4>
-                        <span class="more-options">...</span>
+                        <h4><i class="fas fa-map-marker-alt card-icon"></i> Location Live</h4>
+                        <span class="more-options"><i class="fas fa-ellipsis-h"></i></span>
                     </div>
                     <div id="mapPlaceholder">
                         <div id="map"></div>
@@ -412,15 +712,20 @@
                         <p><span>Jarak:</span> <span id="busDistance">0 Km</span> • <span>Waktu:</span> <span id="busTime">0 min</span></p>
                     </div>
                     <div class="location-actions">
-                        <button class="share-now-btn">Share now</button>
-                        <span><span class="icon">📍</span> 9 Km</span>
+                        <button class="share-now-btn">
+                            <i class="fas fa-share-alt"></i> Share now
+                        </button>
+                        <span class="location-distance">
+                            <span class="icon"><i class="fas fa-map-pin"></i></span>
+                            <span>9 Km</span>
+                        </span>
                     </div>
                 </div>
 
                 <div id="automotiveCard" class="card">
                     <div class="card-header">
-                        <h4>Bus Performance</h4>
-                        <span class="more-options">...</span>
+                        <h4><i class="fas fa-tachometer-alt card-icon"></i> Bus Performance</h4>
+                        <span class="more-options"><i class="fas fa-ellipsis-h"></i></span>
                     </div>
                     
                     <div class="gauges-container">
@@ -493,8 +798,8 @@
             <div id="centerColumn">
                 <div id="driverInfoCard" class="card">
                     <div class="card-header">
-                        <h4>Perjalanan Bus</h4>
-                        <span class="more-options">...</span>
+                        <h4><i class="fas fa-route card-icon"></i> Perjalanan Bus</h4>
+                        <span class="more-options"><i class="fas fa-ellipsis-h"></i></span>
                     </div>
                     <div class="driver-details">
                         <div class="detail-item"><strong>ID Driver:</strong> <span id="driverId">DRV-001</span></div>
@@ -505,43 +810,43 @@
 
                 <div id="controlButtonsGrid">
                     <div class="grid-btn" id="doorStatusBtn">
-                        <span class="icon">🚪</span>
+                        <span class="icon"><i class="fas fa-door-open"></i></span>
                         <span class="btn-label">Pintu</span>
                     </div>
                     <div class="grid-btn" id="passengerListBtn">
-                        <span class="icon">👥</span>
+                        <span class="icon"><i class="fas fa-users"></i></span>
                         <span class="btn-label">Penumpang</span>
                     </div>
                     <div class="grid-btn" id="lightStatusBtn">
-                        <span class="icon">💡</span>
+                        <span class="icon"><i class="fas fa-lightbulb"></i></span>
                         <span class="btn-label">Lampu</span>
                     </div>
                     <div class="grid-btn">
-                        <span class="icon">🗺️</span>
+                        <span class="icon"><i class="fas fa-map-marked-alt"></i></span>
                         <span class="btn-label">Peta</span>
                     </div>
                     <div class="grid-btn">
-                        <span class="icon">🔦</span>
-                        <span class="btn-label">Senter</span>
+                        <span class="icon"><i class="fas fa-car-battery"></i></span>
+                        <span class="btn-label">Battery</span>
                     </div>
                     <div class="grid-btn">
-                        <span class="icon">⚡</span>
+                        <span class="icon"><i class="fas fa-plug"></i></span>
                         <span class="btn-label">Charger</span>
                     </div>
                     <div class="grid-btn" id="driverAnnouncementBtn">
-                        <span class="icon">📢</span>
+                        <span class="icon"><i class="fas fa-bullhorn"></i></span>
                         <span class="btn-label">Pengumuman</span>
                     </div>
                     <div class="grid-btn">
-                        <span class="icon">🧭</span>
+                        <span class="icon"><i class="fas fa-compass"></i></span>
                         <span class="btn-label">Navigasi</span>
                     </div>
                 </div>
 
                 <div id="emergencyCard" class="card">
                     <div class="card-header">
-                        <h4 style="color: white;">Emergency</h4>
-                        <span class="more-options" style="color: rgba(255,255,255,0.7);">...</span>
+                        <h4><i class="fas fa-exclamation-triangle card-icon"></i> Emergency</h4>
+                        <span class="more-options"><i class="fas fa-ellipsis-h"></i></span>
                     </div>
                     <p>Use for Emergency case only</p>
                     <div class="emergency-toggle">
@@ -553,8 +858,8 @@
             <div id="rightColumn">
                 <div id="busStatusCard" class="card">
                     <div class="card-header">
-                        <h4>Bus Monitoring</h4>
-                        <span class="more-options">...</span>
+                        <h4><i class="fas fa-bus-alt card-icon"></i> Bus Monitoring</h4>
+                        <span class="more-options"><i class="fas fa-ellipsis-h"></i></span>
                     </div>
                     <div id="busStatsDisplay">
                         <div class="stat-item">
@@ -586,7 +891,7 @@
 
         // --- Three.js Setup ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf0f2f5);
+        scene.background = new THREE.Color(0xf8fafc);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
@@ -613,7 +918,7 @@
         renderer.setSize(busStatusCard.clientWidth, busStatusCard.clientHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setClearColor(0xf0f2f5, 1);
+        renderer.setClearColor(0xf8fafc, 1);
         
         busStatusCard.appendChild(renderer.domElement);
 
@@ -638,9 +943,9 @@
                 }, 500);
                 
                 const material = new THREE.MeshStandardMaterial({
-                    color: 0x95a5a6,
-                    roughness: 0.7,
-                    metalness: 0.2,
+                    color: 0x4f46e5,
+                    roughness: 0.4,
+                    metalness: 0.6,
                     side: THREE.DoubleSide,
                     transparent: true,
                     opacity: 0
